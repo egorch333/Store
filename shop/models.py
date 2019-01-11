@@ -14,6 +14,11 @@ class Category(MPTTModel):
     class MPTTMeta:
         order_insertion_by = ['name']
 
+    class Meta:
+        verbose_name = "Категория"
+        verbose_name_plural = "Категории"
+
+
     def __str__(self):
         return self.name
 
