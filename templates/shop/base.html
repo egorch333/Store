@@ -1,4 +1,8 @@
 {% extends 'base.html' %}
 {% block content %}
-
+    <div class="row">
+        {% block product %}
+        {% endblock product %}
+        {% include 'shop/sidebar.html' %}
+    </div>
 {% endblock content %}

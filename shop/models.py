@@ -38,3 +38,36 @@ class Product(models.Model):
 
     def __str__(self):
         return self.title
+
+
+class Cart(models.Model):
+    """Модель корзины"""
+    #user = models.ForeignKey(User, verbose_name="Пользователь", on_delete=models.CASCADE)
+    user = models.CharField("Пользователь", max_length=150, unique=True)
+    accepted = models.BooleanField("Принято", default=False)
+
+    class Meta:
+        verbose_name = "Корзина"
+        verbose_name_plural = "Корзины"
+
+    def __str__(self):
+        return "корзина:" + self.user
+
+class CartItem(models.Model):
+    """Модель товаров в корзине"""
+    product = models.ForeignKey(Product, verbose_name="Продукт", on_delete=models.CASCADE)
+    quantity = models.IntegerField("Количество", default=0)
+    cart = models.ForeignKey(Cart, verbose_name="Корзина", on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = "Товар в корзине"
+        verbose_name_plural = "Товары в корзине"
+
+class Orders(models.Model):
+    """Модель заказов"""
+    cart = models.ForeignKey(Cart, verbose_name="Корзина", on_delete=models.CASCADE)
+    accepted = models.BooleanField("Принято", default=False)
+
+    class Meta:
+        verbose_name = "Заказ"
+        verbose_name_plural = "Заказы"
