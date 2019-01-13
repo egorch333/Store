@@ -1,5 +1,6 @@
 from django.db import models
 from mptt.models import MPTTModel, TreeForeignKey
+from django.contrib.auth.models import User
 
 class Category(MPTTModel):
     """Категории товаров, модель ссылается сама на себя - self"""
@@ -42,8 +43,9 @@ class Product(models.Model):
 
 class Cart(models.Model):
     """Модель корзины"""
-    #user = models.ForeignKey(User, verbose_name="Пользователь", on_delete=models.CASCADE)
-    user = models.CharField("Пользователь", max_length=150, unique=True)
+    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    # user = models.ForeignKey(User, verbose_name="Пользователь", on_delete=models.CASCADE)
+    # user = models.CharField("Пользователь", max_length=150, unique=True)
     accepted = models.BooleanField("Принято", default=False)
 
     class Meta:
