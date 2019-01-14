@@ -75,5 +75,30 @@
 	<script src="{% static 'js/jquery.stellar.min.js' %}"></script>
 	<!-- Main -->
 	<script src="{% static 'js/main.js' %}"></script>
+	<script>
+		$(document).ready(function(){
+			$(".quantity-left-minus").click(function () {
+			  var value = $(".input-number").val();
+			  value = parseInt(value);
+
+			  if(value > 1){
+			  	value -= 1;
+			  	$(".input-number").val(value);
+			  }
+			  // блокировка перехода на другую страницу
+			  return false;
+			});
+
+			$(".quantity-right-plus").click(function () {
+			  var value = $(".input-number").val();
+			  value = parseInt(value);
+				value += 1;
+				$(".input-number").val(value);
+
+			  // блокировка перехода на другую страницу
+			  return false;
+			});
+		});
+	</script>
 </body>
 </html>
