@@ -6,6 +6,7 @@ from django.views.generic.edit import FormMixin
 
 from .models import *
 from django.contrib.auth.models import User
+from django.db import IntegrityError
 
 
 
@@ -33,10 +34,20 @@ class ProductDetail(FormMixin, DetailView):
             # cur_user = users[0].get('username')
             # user = str(self.request.user)
             # print(type(str(self.request.user)))
-            cart = Cart.objects.create(user=self.request.user)
+            try:
+                cart = Cart.objects.create(user=self.request.user)
+                print(1)
+            except IntegrityError:
+                cart = Cart.objects.filter(user=self.request.user)[0]
+                print(cart)
+
             product = Product.objects.filter(slug=slug)[0]
             # product_id = Product.objects.filter(slug=slug)[0].id
             CartItem.objects.create(product=product, quantity=quantity, cart=cart)
-            Orders.objects.create(cart=cart)
+
+            check_cart = Orders.objects.filter(cart=cart)
+            # Orders.objects.filter(id=1)[0].id
+            if len(check_cart) == 0:
+                Orders.objects.create(cart=cart)
 
         return context

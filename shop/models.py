@@ -2,6 +2,7 @@ from django.db import models
 from mptt.models import MPTTModel, TreeForeignKey
 from django.contrib.auth.models import User
 
+
 class Category(MPTTModel):
     """Категории товаров, модель ссылается сама на себя - self"""
     name = models.CharField(max_length=50, unique=True)
@@ -52,8 +53,8 @@ class Cart(models.Model):
         verbose_name = "Корзина"
         verbose_name_plural = "Корзины"
 
-    def __str__(self):
-        return "корзина:" + self.user
+    # def __str__(self):
+    #     return "корзина:" + self.user
 
 class CartItem(models.Model):
     """Модель товаров в корзине"""
