@@ -61,6 +61,7 @@ class CartItem(models.Model):
     """Модель товаров в корзине"""
     product = models.ForeignKey(Product, verbose_name="Продукт", on_delete=models.CASCADE)
     quantity = models.PositiveIntegerField("Количество", default=0)
+    price_sum = models.PositiveIntegerField("Общая сумма", default=0)
     cart = models.ForeignKey(Cart, verbose_name="Корзина", on_delete=models.CASCADE)
 
     class Meta:

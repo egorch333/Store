@@ -40,3 +40,10 @@ class AddCartItem(View):
         else:
             messages.add_message(request, settings.MY_INFO, "Error")
             return redirect("/detail/{}/".format(slug))
+
+
+class CartItemList(ListView):
+    template_name = 'shop/cart.html'
+
+    def get_queryset(self):
+        return CartItem.objects.filter(cart__user=self.request.user, cart__accepted=False)
