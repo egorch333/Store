@@ -1,12 +1,11 @@
-from django.shortcuts import render
-from django.views.generic import ListView
-from django.views.generic.detail import DetailView
-from .form import *
-from django.views.generic.edit import FormMixin
+from django.contrib import messages
+from django.shortcuts import render, redirect
+from django.views.generic import ListView, DetailView
+from django.views.generic.base import View
 
+from Store import settings
 from .models import *
-from django.contrib.auth.models import User
-from django.db import IntegrityError
+from .form import *
 
 
 
@@ -15,7 +14,7 @@ class ProductsList(ListView):
     model = Product
     template_name = "shop/list-product.html"
 
-class ProductDetail(FormMixin, DetailView):
+class ProductDetail(DetailView):
     """Карточка товара"""
     model = Product
     context_object_name = 'product'
@@ -24,30 +23,20 @@ class ProductDetail(FormMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['form'] = self.get_form()
-
-        """записываю данные в БД"""
-        if(self.request.GET):
-            quantity = self.request.GET['quantity']
-            slug = self.kwargs['slug']
-            # users = User.objects.values()
-            # cur_user = users[0].get('username')
-            # user = str(self.request.user)
-            # print(type(str(self.request.user)))
-            try:
-                cart = Cart.objects.create(user=self.request.user)
-                print(1)
-            except IntegrityError:
-                cart = Cart.objects.filter(user=self.request.user)[0]
-                print(cart)
-
-            product = Product.objects.filter(slug=slug)[0]
-            # product_id = Product.objects.filter(slug=slug)[0].id
-            CartItem.objects.create(product=product, quantity=quantity, cart=cart)
-
-            check_cart = Orders.objects.filter(cart=cart)
-            # Orders.objects.filter(id=1)[0].id
-            if len(check_cart) == 0:
-                Orders.objects.create(cart=cart)
-
+        context["form"] = CartItemForm()
         return context
+
+class AddCartItem(View):
+    """Добавление товара в карзину"""
+    def post(self, request, slug, pk):
+        form = CartItemForm(request.POST)
+        if form.is_valid():
+            form = form.save(commit=False)
+            form.product_id = pk
+            form.cart = Cart.objects.get(user=request.user, accepted=False)
+            form.save()
+            messages.add_message(request, settings.MY_INFO, "Товар добавлен")
+            return redirect("/detail/{}/".format(slug))
+        else:
+            messages.add_message(request, settings.MY_INFO, "Error")
+            return redirect("/detail/{}/".format(slug))

@@ -3,6 +3,7 @@ from mptt.models import MPTTModel, TreeForeignKey
 from django.contrib.auth.models import User
 
 
+
 class Category(MPTTModel):
     """Категории товаров, модель ссылается сама на себя - self"""
     name = models.CharField(max_length=50, unique=True)
@@ -44,7 +45,7 @@ class Product(models.Model):
 
 class Cart(models.Model):
     """Модель корзины"""
-    user = models.OneToOneField(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
     # user = models.ForeignKey(User, verbose_name="Пользователь", on_delete=models.CASCADE)
     # user = models.CharField("Пользователь", max_length=150, unique=True)
     accepted = models.BooleanField("Принято", default=False)
@@ -53,18 +54,21 @@ class Cart(models.Model):
         verbose_name = "Корзина"
         verbose_name_plural = "Корзины"
 
-    # def __str__(self):
-    #     return "корзина:" + self.user
+    def __str__(self):
+        return "{}".format(self.user)
 
 class CartItem(models.Model):
     """Модель товаров в корзине"""
     product = models.ForeignKey(Product, verbose_name="Продукт", on_delete=models.CASCADE)
-    quantity = models.IntegerField("Количество", default=0)
+    quantity = models.PositiveIntegerField("Количество", default=0)
     cart = models.ForeignKey(Cart, verbose_name="Корзина", on_delete=models.CASCADE)
 
     class Meta:
         verbose_name = "Товар в корзине"
-        verbose_name_plural = "Товары в корзине"
+        verbose_name_plural = "Товаров в корзине"
+
+    def __str__(self):
+        return "{}".format(self.cart)
 
 class Orders(models.Model):
     """Модель заказов"""
@@ -74,3 +78,6 @@ class Orders(models.Model):
     class Meta:
         verbose_name = "Заказ"
         verbose_name_plural = "Заказы"
+
+    def __str__(self):
+        return "{}".format(self.cart)
