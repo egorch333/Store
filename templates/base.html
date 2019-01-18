@@ -98,6 +98,22 @@
 			  // блокировка перехода на другую страницу
 			  return false;
 			});
+
+			//смена количества товара в корзине
+			$("input#quantity").change(function() {
+			  var value = $(this).val();
+			  var id = $(this).attr("data-id-cart");
+				$("#idcart" + id).attr("data-quantity", value);
+			});
+
+			//нажатие на значок редактирование в корзине
+			$("a[id ^='idcart']").click(function () {
+			  var href = $(this).attr('href');
+			  var quantity = $(this).attr('data-quantity');
+			  var url = href + quantity;
+			  //alert(url);
+			  $(location).attr('href',url);
+			});
 		});
 	</script>
 </body>

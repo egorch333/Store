@@ -47,3 +47,12 @@ class CartItemList(ListView):
 
     def get_queryset(self):
         return CartItem.objects.filter(cart__user=self.request.user, cart__accepted=False)
+
+
+class CartItemEdit(View):
+    """Редактирование товара в карзине"""
+    def get(self, request, pk, slug, price):
+        # print(slug, pk)
+        print(slug, pk)
+
+        return redirect("/cart/")

@@ -64,7 +64,8 @@
                                            class="form-control input-number text-center"
                                            value="{{item.quantity}}"
                                            min="1"
-                                           max="100">
+                                           max="100"
+                                           data-id-cart="{{ item.id }}">
                                 </div>
                             </div>
                             <div class="one-eight text-center">
@@ -74,7 +75,7 @@
                             </div>
                             <div class="one-eight text-center">
                                 <div class="display-tc">
-                                    <span class="price">*</span>
+                                    <a id="idcart{{ item.id }}" data-quantity="{{item.quantity}}" href="{% url 'edit_cart' item.id item.product.slug item.product.price %}"><i class="icon-pencil"></i></a>
                                 </div>
                             </div>
                             <div class="one-eight text-center">
