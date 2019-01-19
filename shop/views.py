@@ -31,21 +31,32 @@ class AddCartItem(View):
     def post(self, request, slug, pk):
         form = CartItemForm(request.POST)
         if form.is_valid():
-            form = form.save(commit=False)
-            form.product_id = pk
-            form.cart = Cart.objects.get(user=request.user, accepted=False)
 
             # вытаскиваю цену продукта
             product = Product.objects.filter(id=pk)
             product = product.values('price')
             product = list(product)
             price = product[0]['price']
-            form.price_sum = int(price) * int(request.POST['quantity'])
-            type(price)
-            type(request.POST['quantity'])
-            # form.price_sum = 111
+            price_sum = int(price) * int(request.POST['quantity'])
 
-            form.save()
+            # проверка на дублирование товара
+            cart_obj = CartItem.objects.filter(product__id=pk)
+            if len(cart_obj) > 0:
+                # изменяю общую цену и количество (происходит сложение)
+                cart = cart_obj.values('quantity')
+                cart = list(cart)
+                quantity = cart[0]['quantity'] + int(request.POST['quantity'])
+                price_sum = int(price) * int(quantity)
+                cart_obj.update(price_sum=price_sum, quantity=quantity)
+            else:
+                # добавляю общую цену и количество
+                form = form.save(commit=False)
+                form.product_id = pk
+                form.cart = Cart.objects.get(user=request.user, accepted=False)
+                form.price_sum = price_sum
+                form.save()
+
+
             messages.add_message(request, settings.MY_INFO, "Товар добавлен")
             return redirect("/detail/{}/".format(slug))
         else:
