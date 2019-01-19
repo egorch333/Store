@@ -57,3 +57,10 @@ class CartItemEdit(View):
         CartItem.objects.filter(id=pk).update(price_sum=price_sum, quantity=quantity)
 
         return redirect("/cart/")
+
+class CartItemDell(View):
+    """Редактирование товара в карзине"""
+    def get(self, request, pk):
+        CartItem.objects.filter(id=pk).delete()
+
+        return redirect("/cart/")
