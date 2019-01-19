@@ -70,12 +70,60 @@
 	<script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
 	<script src="{% static 'js/magnific-popup-options.js' %}"></script>
 	<!-- Date Picker -->
-	<script src="{% static 'js/bootstrap-datepicker.js' %}"></script>
-	<!-- Stellar Parallax -->
-	<script src="{% static 'js/jquery.stellar.min.js' %}"></script>
-	<!-- Main -->
-	<script src="{% static 'js/main.js' %}"></script>
-	<script>
+<script src="{% static 'js/bootstrap-datepicker.js' %}"></script>
+<!-- Stellar Parallax -->
+<script src="{% static 'js/jquery.stellar.min.js' %}"></script>
+<!-- Main -->
+<script src="{% static 'js/main.js' %}"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<script>
 		$(document).ready(function(){
 			$(".quantity-left-minus").click(function () {
 			  var value = $(".input-number").val();
@@ -110,11 +158,24 @@
 			$("a[id ^='idcart']").click(function () {
 			  var href = $(this).attr('href');
 			  var quantity = $(this).attr('data-quantity');
-			  var url = href + quantity;
-			  //alert(url);
+
+			  //разборка урла
+			  var arr = href.split('/');
+			  console.log(arr);
+			  var url = '';
+			  var i = 0;
+
+			  //сборка урла
+			  while(i < 4){
+			  	console.log(arr[i]);
+			  	url += arr[i] + '/'
+			  	i++;
+			  }
+
+			  url = url + quantity;
+			  console.log(url);
 			  $(location).attr('href',url);
+			  return false;
 			});
 		});
 	</script>
-</body>
-</html>

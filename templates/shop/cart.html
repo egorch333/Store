@@ -75,7 +75,7 @@
                             </div>
                             <div class="one-eight text-center">
                                 <div class="display-tc">
-                                    <a id="idcart{{ item.id }}" data-quantity="{{item.quantity}}" href="{% url 'edit_cart' item.id item.product.slug item.product.price %}"><i class="icon-pencil"></i></a>
+                                    <a id="idcart{{ item.id }}" data-quantity="{{item.quantity}}" href="{% url 'edit_cart' item.id item.product.price item.quantity %}"><i class="icon-pencil"></i></a>
                                 </div>
                             </div>
                             <div class="one-eight text-center">

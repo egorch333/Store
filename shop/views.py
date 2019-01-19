@@ -51,8 +51,9 @@ class CartItemList(ListView):
 
 class CartItemEdit(View):
     """Редактирование товара в карзине"""
-    def get(self, request, pk, slug, price):
-        # print(slug, pk)
-        print(slug, pk)
+    def get(self, request, pk, price, quantity):
+        print(pk, price, quantity)
+        price_sum = price * quantity
+        CartItem.objects.filter(id=pk).update(price_sum=price_sum, quantity=quantity)
 
         return redirect("/cart/")
