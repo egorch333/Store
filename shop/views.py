@@ -48,6 +48,20 @@ class CartItemList(ListView):
     def get_queryset(self):
         return CartItem.objects.filter(cart__user=self.request.user, cart__accepted=False)
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+
+        arr_sum = CartItem.objects.values('price_sum')
+        arr_sum = list(arr_sum)
+        total = 0
+
+        for value in arr_sum:
+            print(value)
+            total += value['price_sum']
+
+        context["total"] = total
+        return context
+
 
 class CartItemEdit(View):
     """Редактирование товара в карзине"""
