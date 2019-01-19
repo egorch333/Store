@@ -30,7 +30,7 @@ class Product(models.Model):
     category = models.ForeignKey(Category, verbose_name="Категория", on_delete=models.CASCADE)
     title = models.CharField("Название", max_length=150)
     description = models.TextField("Описание")
-    price = models.IntegerField("Цена", default=0)
+    price = models.PositiveIntegerField("Цена", default=0)
     slug = models.SlugField(max_length=150)
     availability = models.BooleanField("Наличие", default=True)
     quantity = models.IntegerField("Количество", default=1)

@@ -34,6 +34,17 @@ class AddCartItem(View):
             form = form.save(commit=False)
             form.product_id = pk
             form.cart = Cart.objects.get(user=request.user, accepted=False)
+
+            # вытаскиваю цену продукта
+            product = Product.objects.filter(id=pk)
+            product = product.values('price')
+            product = list(product)
+            price = product[0]['price']
+            form.price_sum = int(price) * int(request.POST['quantity'])
+            type(price)
+            type(request.POST['quantity'])
+            # form.price_sum = 111
+
             form.save()
             messages.add_message(request, settings.MY_INFO, "Товар добавлен")
             return redirect("/detail/{}/".format(slug))
