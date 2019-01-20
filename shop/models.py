@@ -59,14 +59,18 @@ class Cart(models.Model):
 
 class CartItem(models.Model):
     """Модель товаров в корзине"""
-    product = models.ForeignKey(Product, verbose_name="Продукт", on_delete=models.CASCADE)
-    quantity = models.PositiveIntegerField("Количество", default=0)
-    price_sum = models.PositiveIntegerField("Общая сумма", default=0)
     cart = models.ForeignKey(Cart, verbose_name="Корзина", on_delete=models.CASCADE)
+    product = models.ForeignKey(Product, verbose_name="Товар", on_delete=models.CASCADE)
+    quantity = models.PositiveIntegerField("Количество", default=1)
+    price_sum = models.PositiveIntegerField("Общая сумма", default=0)
 
     class Meta:
-        verbose_name = "Товар в корзине"
-        verbose_name_plural = "Товаров в корзине"
+        verbose_name = 'Товар в корзине'
+        verbose_name_plural = 'Товары в корзине'
+
+    def save(self, *args, **kwargs):
+        self.price_sum = self.quantity * self.product.price
+        super().save(*args, **kwargs)
 
     def __str__(self):
         return "{}".format(self.cart)
