@@ -47,10 +47,11 @@ class Product(models.Model):
 
 class Cart(models.Model):
     """Модель корзины"""
-    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    user = models.ForeignKey(User, verbose_name='Покупатель', on_delete=models.CASCADE)
+    accepted = models.BooleanField(verbose_name='Принято к заказу', default=False)
     # user = models.ForeignKey(User, verbose_name="Пользователь", on_delete=models.CASCADE)
     # user = models.CharField("Пользователь", max_length=150, unique=True)
-    accepted = models.BooleanField("Принято", default=False)
+
 
     class Meta:
         verbose_name = "Корзина"
