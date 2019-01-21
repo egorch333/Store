@@ -28,17 +28,16 @@ class ProductDetail(DetailView):
         context["form"] = CartItemForm()
         return context
 
+
 class AddCartItem(View):
     """Добавление товара в карзину"""
     def post(self, request, slug, pk):
         quantity = request.POST.get("quantity", None)
         if quantity is not None and int(quantity) > 0:
             try:
-                """если есть товар в корзине, обновляем количество"""
                 item = CartItem.objects.get(cart__user=request.user, product_id=pk)
                 item.quantity += int(quantity)
             except CartItem.DoesNotExist:
-                """если нет товара в корзине, то добавляем"""
                 item = CartItem(
                     cart=Cart.objects.get(user=request.user, accepted=False),
                     product_id=pk,
@@ -62,8 +61,7 @@ class CartItemList(ListView):
     def get_context_data(self, **kwargs):
         """подсчёт суммы всех товаров в козине"""
         context = super().get_context_data(**kwargs)
-        total = CartItem.objects.filter(cart__user=self.request.user, cart__accepted=False).aggregate(Sum('price_sum'))
-        context["total"] = total['price_sum__sum']
+        context['total'] = CartItem.objects.filter(cart__user=self.request.user, cart__accepted=False).aggregate(Sum('price_sum'))
         return context
 
 
@@ -83,4 +81,26 @@ class RemoveCartItem(View):
     def get(self, request, pk):
         CartItem.objects.get(id=pk, cart__user=request.user).delete()
         messages.add_message(request, settings.MY_INFO, 'Товар удален')
+        return redirect("cart_item")
+
+
+class AddOrder(View):
+    """Создание заказа"""
+    def get(self, request):
+        """принимаю товары"""
+        cart = Cart.objects.get(user=request.user, accepted=False)
+        cart.accepted = True
+        cart.save()
+
+        """создаю заказ"""
+        try:
+            order1 = Orders.objects.get(cart__user=request.user, cart__accepted=False)
+            order1.cart = cart
+            print(1)
+            messages.add_message(request, settings.MY_INFO, 'Уже создан заказ')
+        except Orders.DoesNotExist:
+            print(2)
+            messages.add_message(request, settings.MY_INFO, 'Создан заказ')
+            # order1.save()
+
         return redirect("cart_item")
