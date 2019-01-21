@@ -86,6 +86,20 @@
                 <div class="col-md-10 col-md-offset-1">
                     <div class="total-wrap">
                         <div class="row">
+                            <div class="col-md-12">
+                                {% if messages %}
+                                    {% for message in messages %}
+                                        <div class="alert alert-success" role="alert">
+                                            <button class="close" data-dismiss="alert">
+                                                <small><sup>x</sup></small>
+                                            </button>
+                                            <p class="reviews">{{ message }}</p>
+                                        </div>
+                                    {% endfor %}
+                                {% endif %}
+                            </div>
+                        </div>
+                        <div class="row">
                             <div class="col-md-8">
                                 <form action="{% url 'add_order' %}">
                                     <div class="row form-group">

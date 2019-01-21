@@ -93,4 +93,4 @@ class Orders(models.Model):
 @receiver(post_save, sender=User)
 def create_user_cart(sender, instance, created, **kwargs):
     if created:
-        Cart.objects.create(cart__user=instance)
+        Cart.objects.create(user=instance)

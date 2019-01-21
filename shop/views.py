@@ -87,20 +87,19 @@ class RemoveCartItem(View):
 class AddOrder(View):
     """Создание заказа"""
     def get(self, request):
-        """принимаю товары"""
-        cart = Cart.objects.get(user=request.user, accepted=False)
-        cart.accepted = True
-        cart.save()
-
-        """создаю заказ"""
         try:
-            order1 = Orders.objects.get(cart__user=request.user, cart__accepted=False)
-            order1.cart = cart
-            print(1)
-            messages.add_message(request, settings.MY_INFO, 'Уже создан заказ')
-        except Orders.DoesNotExist:
-            print(2)
-            messages.add_message(request, settings.MY_INFO, 'Создан заказ')
-            # order1.save()
+            """принимаю товары в корзине"""
+            cart = Cart.objects.get(user=request.user, accepted=False)
+            cart.accepted = True
+            cart.save()
 
+            """создаю заказ"""
+            order = Orders(
+                cart=cart,
+                accepted=True
+            )
+            messages.add_message(request, settings.MY_INFO, 'Создан заказ')
+            order.save()
+        except Cart.DoesNotExist:
+            messages.add_message(request, settings.MY_INFO, 'Ваша корзина пуста!')
         return redirect("cart_item")
