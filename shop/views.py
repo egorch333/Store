@@ -103,3 +103,10 @@ class AddOrder(View):
         except Cart.DoesNotExist:
             messages.add_message(request, settings.MY_INFO, 'Ваша корзина пуста!')
         return redirect("cart_item")
+
+
+
+class OrderItemList(ListView):
+    """Список всех заказов"""
+    model = Orders
+    template_name = "shop/list-orders.html"
