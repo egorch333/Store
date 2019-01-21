@@ -3,6 +3,7 @@ from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView
 from django.views.generic.base import View
 from django.db.models import Sum
+from django.db.models import Q
 
 from Store import settings
 from .models import *
@@ -14,7 +15,24 @@ from .form import *
 class ProductsList(ListView):
     """Список всех продуктов"""
     model = Product
+    context_object_name = 'object_list'
     template_name = "shop/list-product.html"
+
+    """
+    не работает get что я ни делал )
+    
+    def get(self, request, *args, **kwargs):
+        context = self.get_context_data()
+        # context['object_list'] = Product.objects.all()
+        return self.render_to_response(context)
+    """
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        search = self.request.GET.get("search", None)
+        if search is not None:
+            context['object_list'] = Product.objects.filter(Q(title__icontains=search) | Q(category__name__icontains=search))
+        return context
 
 class ProductDetail(DetailView):
     """Карточка товара"""
@@ -88,7 +106,7 @@ class AddOrder(View):
     """Создание заказа"""
     def get(self, request):
         try:
-            """принимаю товары в корзине"""
+            """принимаю товары в корзине - закрываю корзину"""
             cart = Cart.objects.get(user=request.user, accepted=False)
             cart.accepted = True
             cart.save()
@@ -110,3 +128,5 @@ class OrderItemList(ListView):
     """Список всех заказов"""
     model = Orders
     template_name = "shop/list-orders.html"
+
+

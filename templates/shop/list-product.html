@@ -2,6 +2,17 @@
 {% load staticfiles %}
 {% block product %}
     <div class="col-md-10 col-md-push-2">
+        <div class="display-tc">
+            <form action="" method="get">
+                <input type="text" name="search"
+                       class="input-number"
+                       min="1"
+                       max="100">
+                <button type="submit" class="closed">поиск</button>
+            </form>
+        </div>
+    </div>
+    <div class="col-md-10 col-md-push-2">
         <div class="row row-pb-lg">
             {% for product in object_list %}
                 <div class="col-md-4 text-center">
