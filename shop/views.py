@@ -53,7 +53,7 @@ class AddCartItem(View):
         quantity = request.POST.get("quantity", None)
         if quantity is not None and int(quantity) > 0:
             try:
-                item = CartItem.objects.get(cart__user=request.user, product_id=pk)
+                item = CartItem.objects.get(cart__user=request.user, cart__accepted=False, product_id=pk)
                 item.quantity += int(quantity)
             except CartItem.DoesNotExist:
                 item = CartItem(
