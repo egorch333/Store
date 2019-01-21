@@ -111,6 +111,9 @@ class AddOrder(View):
             cart.accepted = True
             cart.save()
 
+            """создаю новую корзину"""
+            Cart.objects.create(user=request.user, accepted=False)
+
             """создаю заказ"""
             order = Orders(
                 cart=cart,
