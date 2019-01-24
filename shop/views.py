@@ -121,3 +121,17 @@ class OrderList(ListView):
         return redirect("orders")
 
 
+class CategoryProduct(ListView):
+    """Список товаров из категории"""
+    template_name = "shop/list-product.html"
+
+    def get_queryset(self):
+        slug = self.kwargs.get("slug")
+        node = Category.objects.get(slug=slug)
+        if Product.objects.filter(category__slug=slug).exists():
+            products = Product.objects.filter(category__slug=slug)
+        else:
+            products = Product.objects.filter(category__slug__in=[x.slug for x in node.get_family()])
+        return products
+
+

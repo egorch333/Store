@@ -13,9 +13,15 @@ class CartAdmin(admin.ModelAdmin):
     list_display = ['user', 'accepted']
 
 
+class ProductAdmin(admin.ModelAdmin):
+    # вывод названия в таблице
+    list_display = ['title', 'category', 'price', 'quantity']
+
+
 class CartItemAdmin(admin.ModelAdmin):
     # вывод названия в таблице
-    list_display = ['product', 'quantity']
+    list_display = ['cart', 'product', 'quantity']
+
 
 class OrderAdmin(admin.ModelAdmin):
     # вывод названия в таблице
