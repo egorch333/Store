@@ -30,6 +30,13 @@
                             <li><a href="/accounts/login/">Login</a></li>
                         {% endif %}
                         <li><a href="cart.html"><i class="icon-shopping-cart"></i> Cart [0]</a></li>
+                        <li>
+                            <form method="get" action="{% url 'search' %}">
+                                {% csrf_token %}
+                                <input type="text" value="" name="search" placeholder="Поиск">
+                                <button class="small" type="submit">Найти</button>
+                            </form>
+                        </li>
                     </ul>
                 </div>
             </div>

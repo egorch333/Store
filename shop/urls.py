@@ -11,4 +11,6 @@ urlpatterns = [
     path("edit/<int:pk>/", views.EditCartItem.as_view(), name="edit_item"),
     path("add_order/", views.AddOrder.as_view(), name="add_order"),
     path("orders/", views.OrderItemList.as_view(), name="order_item"),
+    path("search/", views.Search.as_view(), name="search"),
 ]
+

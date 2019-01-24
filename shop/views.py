@@ -18,21 +18,15 @@ class ProductsList(ListView):
     context_object_name = 'object_list'
     template_name = "shop/list-product.html"
 
-    """
-    не работает get что я ни делал )
-    
-    def get(self, request, *args, **kwargs):
-        context = self.get_context_data()
-        # context['object_list'] = Product.objects.all()
-        return self.render_to_response(context)
-    """
 
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        search = self.request.GET.get("search", None)
-        if search is not None:
-            context['object_list'] = Product.objects.filter(Q(title__icontains=search) | Q(category__name__icontains=search))
-        return context
+class Search(View):
+    """Поиск товаров"""
+    def get(self, request):
+        search = request.GET.get("search", None)
+        products = Product.objects.filter(Q(title__icontains=search) |
+                                          Q(category__name__icontains=search))
+        return render(request, "shop/list-product.html", {"object_list": products})
+
 
 class ProductDetail(DetailView):
     """Карточка товара"""
