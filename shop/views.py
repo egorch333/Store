@@ -118,6 +118,16 @@ class OrderList(ListView):
     def post(self, request):
         order = Order.objects.get(id=request.POST.get("pk"), cart__user=request.user, accepted=False)
         order.delete()
+
+        """удаление корзины"""
+        cart = Cart.objects.get(id=order.cart.id)
+        cart.delete()
+
+        """создается новая корзина при добавлении товара в корзину
+        нижняя строка выдаст ошибку
+        Cart.objects.create(user=request.user)        
+        """
+
         return redirect("orders")
 
 
