@@ -2,6 +2,7 @@ from django.contrib.auth.models import User
 from django.db import models
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.utils import timezone
 
 from mptt.models import MPTTModel, TreeForeignKey
 
@@ -79,13 +80,16 @@ class CartItem(models.Model):
         return "{}".format(self.cart)
 
 class Order(models.Model):
-    """Модель заказов"""
-    cart = models.ForeignKey(Cart, verbose_name="Корзина", on_delete=models.CASCADE)
-    accepted = models.BooleanField("Принято", default=False)
+    """Заказы"""
+    cart = models.ForeignKey(Cart, verbose_name='Корзина', on_delete=models.CASCADE)
+    accepted = models.BooleanField(verbose_name='Заказ выполнен', default=False)
+    """не работает"""
+    date = models.DateTimeField("Дата", default=timezone.now())
+    # date = models.DateTimeField("Дата", auto_now_add=True)
 
     class Meta:
-        verbose_name = "Заказ"
-        verbose_name_plural = "Заказы"
+        verbose_name = 'Заказ'
+        verbose_name_plural = 'Заказы'
 
     def __str__(self):
         return "{}".format(self.cart)
