@@ -47,7 +47,7 @@ class AddCartItem(View):
         quantity = request.POST.get("quantity", None)
         if quantity is not None and int(quantity) > 0:
             try:
-                item = CartItem.objects.get(cart__user=request.user, cart__accepted=False, product_id=pk)
+                item = CartItem.objects.get(cart__user=request.user, product_id=pk)
                 item.quantity += int(quantity)
             except CartItem.DoesNotExist:
                 item = CartItem(
@@ -71,9 +71,10 @@ class CartItemList(ListView):
         return CartItem.objects.filter(cart__user=self.request.user, cart__accepted=False)
 
     def get_context_data(self, **kwargs):
-        """подсчёт суммы всех товаров в козине"""
         context = super().get_context_data(**kwargs)
-        context['total'] = CartItem.objects.filter(cart__user=self.request.user, cart__accepted=False).aggregate(Sum('price_sum'))
+        context["cart_id"] = Cart.objects.get(user=self.request.user, accepted=False).id
+        context['total'] = CartItem.objects.filter(cart__user=self.request.user, cart__accepted=False).aggregate(
+            Sum('price_sum'))
         return context
 
 
@@ -98,32 +99,25 @@ class RemoveCartItem(View):
 
 class AddOrder(View):
     """Создание заказа"""
-    def get(self, request):
-        try:
-            """принимаю товары в корзине - закрываю корзину"""
-            cart = Cart.objects.get(user=request.user, accepted=False)
-            cart.accepted = True
-            cart.save()
-
-            """создаю новую корзину"""
-            Cart.objects.create(user=request.user, accepted=False)
-
-            """создаю заказ"""
-            order = Orders(
-                cart=cart,
-                accepted=True
-            )
-            messages.add_message(request, settings.MY_INFO, 'Создан заказ')
-            order.save()
-        except Cart.DoesNotExist:
-            messages.add_message(request, settings.MY_INFO, 'Ваша корзина пуста!')
-        return redirect("cart_item")
+    def post(self, request):
+        cart = Cart.objects.get(id=request.POST.get("pk"), user=request.user)
+        cart.accepted = True
+        cart.save()
+        Order.objects.create(cart=cart)
+        Cart.objects.create(user=request.user)
+        return redirect('orders')
 
 
+class OrderList(ListView):
+    """Список заказов пользователя"""
+    template_name = "shop/order-list.html"
 
-class OrderItemList(ListView):
-    """Список всех заказов"""
-    model = Orders
-    template_name = "shop/list-orders.html"
+    def get_queryset(self):
+        return Order.objects.filter(cart__user=self.request.user, accepted=False)
+
+    def post(self, request):
+        order = Order.objects.get(id=request.POST.get("pk"), cart__user=request.user, accepted=False)
+        order.delete()
+        return redirect("orders")
 
 

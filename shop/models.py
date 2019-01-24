@@ -78,7 +78,7 @@ class CartItem(models.Model):
     def __str__(self):
         return "{}".format(self.cart)
 
-class Orders(models.Model):
+class Order(models.Model):
     """Модель заказов"""
     cart = models.ForeignKey(Cart, verbose_name="Корзина", on_delete=models.CASCADE)
     accepted = models.BooleanField("Принято", default=False)

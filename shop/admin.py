@@ -1,7 +1,7 @@
 from django.contrib import admin
 from mptt.admin import MPTTModelAdmin
 
-from .models import Category, Product, Cart, CartItem, Orders
+from .models import Category, Product, Cart, CartItem, Order
 
 
 class CategoryMPTTModelAdmin(MPTTModelAdmin):
@@ -17,7 +17,7 @@ class CartItemAdmin(admin.ModelAdmin):
     # вывод названия в таблице
     list_display = ['product', 'quantity']
 
-class OrdersAdmin(admin.ModelAdmin):
+class OrderAdmin(admin.ModelAdmin):
     # вывод названия в таблице
     list_display = ['cart', 'accepted']
 
@@ -28,4 +28,4 @@ admin.site.register(Category, CategoryMPTTModelAdmin)
 admin.site.register(Product)
 admin.site.register(Cart, CartAdmin)
 admin.site.register(CartItem, CartItemAdmin)
-admin.site.register(Orders, OrdersAdmin)
+admin.site.register(Order, OrderAdmin)
