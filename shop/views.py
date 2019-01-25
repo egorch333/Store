@@ -124,7 +124,7 @@ class OrderList(ListView):
         cart.delete()
 
         """создается новая корзина при добавлении товара в корзину
-        нижняя строка выдаст ошибку
+        нижняя строка выдаст ошибку, две записи в Cart с accepted=FALSE быть не должно
         Cart.objects.create(user=request.user)        
         """
 

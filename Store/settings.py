@@ -44,6 +44,8 @@ INSTALLED_APPS = [
     'allauth.socialaccount',
     'allauth.socialaccount.providers.vk',
     'bootstrap4',
+    'photologue',
+    'sortedm2m',
     'mptt',
     'shop',
 ]
