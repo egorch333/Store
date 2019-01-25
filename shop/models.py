@@ -4,6 +4,8 @@ from django.db.models.signals import post_save
 from django.dispatch import receiver
 from django.utils import timezone
 
+from photologue.models import Gallery
+
 from mptt.models import MPTTModel, TreeForeignKey
 
 
@@ -37,6 +39,12 @@ class Product(models.Model):
     slug = models.SlugField(max_length=150)
     availability = models.BooleanField("Наличие", default=True)
     quantity = models.IntegerField("Количество", default=1)
+    gallery = models.ForeignKey(
+        Gallery,
+        verbose_name="Фотографии",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True)
 
     class Meta:
         verbose_name = "Товар"
