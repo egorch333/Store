@@ -1,7 +1,7 @@
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
-from django.views.generic import ListView, DetailView
+from django.views.generic import ListView, DetailView, TemplateView
 from django.views.generic.base import View
 from django.db.models import Sum
 from django.db.models import Q
@@ -147,17 +147,41 @@ class CategoryProduct(ListView):
         return products
 
 
-# class CheckoutDetail(DetailView):
-#     """Карточка товара"""
-#     model = Profile
-#     context_object_name = 'profile'
-#     template_name = 'shop/checkout.html'
-#     # form_class = CartItemForm
-#
-#     def get_context_data(self, **kwargs):
-#         context = super().get_context_data(**kwargs)
-#         # context["form"] = CartItemForm()
-#         return context
+class ProfileDetail(TemplateView):
+    """Карточка товара"""
+    model = Profile
+    context_object_name = 'profile'
+    template_name = 'shop/profile.html'
+    # form_class = CartItemForm
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["profile"] = data = Profile.objects.get(user=self.request.user)
+        """заполняю форму данными из базы instance, initial - для вставки простого словаря"""
+        context["form"] = ProfileForm(instance=data)
+        return context
+
+
+class ProfileEdit(View):
+    """изменение данных пользователя"""
+    def post(self, request):
+        user = request.user
+        if(user is not None):
+            """запись в бд"""
+
+            profile = Profile.objects.get(user=user)
+            profile.phone = request.POST.get("phone", None)
+            profile.company_name = request.POST.get("company_name", None)
+            profile.payment_method = request.POST.get("payment_method", None)
+            profile.first_name = request.POST.get("first_name", None)
+            profile.last_name = request.POST.get("last_name", None)
+            profile.address = request.POST.get("address", None)
+            profile.email = request.POST.get("email", None)
+            profile.save()
+            messages.add_message(request, settings.MY_INFO, "Изменения внесены")
+        else:
+            messages.add_message(request, settings.MY_INFO, "Ошибка нет такого пользователя")
+        return redirect("profile")
 
 
 class CheckoutDetail(View):
@@ -190,7 +214,5 @@ class CheckoutDetail(View):
         context['items'] = item
         context['total'] = CartItem.objects.filter(cart__user=request.user, cart=order.cart).aggregate(
             Sum('price_sum'))
-
-        print(context)
 
         return render(request, "shop/checkout.html", context)
