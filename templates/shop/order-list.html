@@ -18,6 +18,9 @@
                         <div class="one-eight text-center">
                             <span>Remove</span>
                         </div>
+                        <div class="one-eight text-center">
+                            <span>Действие</span>
+                        </div>
                     </div>
                     {% for order in object_list %}
                         <div class="product-cart">
@@ -48,6 +51,11 @@
                                         <button type="submit" class="closed"></button>
                                     </form>
 {#                                    <a href="{% url 'del_item' pk=item.id %}" class="closed"></a>#}
+                                </div>
+                            </div>
+                            <div class="one-eight text-center">
+                                <div class="display-tc">
+                                    <a href="{% url 'checkout' pk=order.id %}"><span class="price">оплатить заказ</span></a>
                                 </div>
                             </div>
                         </div>

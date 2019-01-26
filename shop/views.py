@@ -1,9 +1,11 @@
 from django.contrib import messages
+from django.contrib.auth.models import User
 from django.shortcuts import render, redirect
 from django.views.generic import ListView, DetailView
 from django.views.generic.base import View
 from django.db.models import Sum
 from django.db.models import Q
+
 
 from Store import settings
 from .models import *
@@ -145,3 +147,48 @@ class CategoryProduct(ListView):
         return products
 
 
+# class CheckoutDetail(DetailView):
+#     """Карточка товара"""
+#     model = Profile
+#     context_object_name = 'profile'
+#     template_name = 'shop/checkout.html'
+#     # form_class = CartItemForm
+#
+#     def get_context_data(self, **kwargs):
+#         context = super().get_context_data(**kwargs)
+#         # context["form"] = CartItemForm()
+#         return context
+
+
+class CheckoutDetail(View):
+    """Оплата товара"""
+    def get(self, request, pk):
+        """подтягиваю данные пользователя"""
+        user = User.objects.get(username=request.user)
+
+        try:
+            profile = Profile.objects.get(user=request.user)
+        except Profile.DoesNotExist:
+            profile = Profile(
+                user = request.user,
+                first_name = user.first_name,
+                last_name = user.last_name,
+                email = user.email,
+            )
+            profile.save()
+
+        """получаю все данные пользователя"""
+        profile = Profile.objects.get(user=request.user)
+
+        """товары в корзине"""
+        order = Order.objects.get(pk=pk)
+        item = CartItem.objects.filter(cart__user=request.user, cart=order.cart)
+
+        """сборка всех данных"""
+        data = {}
+        data['profile'] = profile
+        data['item'] = item
+
+        print(data)
+
+        return render(request, "shop/checkout.html", data)
