@@ -33,6 +33,7 @@
 			                     	<i class="icon icon-arrow-down3"></i>
 			                        <select name="people" id="people" class="form-control">
 				                      	<option value="#">Select country</option>
+				                        <option value="#">Russia</option>
 				                        <option value="#">Alaska</option>
 				                        <option value="#">China</option>
 				                        <option value="#">Japan</option>
@@ -45,52 +46,27 @@
 			               <div class="form-group">
 									<div class="col-md-6">
 										<label for="fname">First Name</label>
-										<input type="text" id="fname" class="form-control" placeholder="Your firstname">
+										<input type="text" id="fname" class="form-control" placeholder="Your firstname" value="{{profile.first_name}}">
 									</div>
 									<div class="col-md-6">
 										<label for="lname">Last Name</label>
-										<input type="text" id="lname" class="form-control" placeholder="Your lastname">
+										<input type="text" id="lname" class="form-control" placeholder="Your lastname" value="{{profile.last_name}}">
 									</div>
 								</div>
 								<div class="col-md-12">
 									<div class="form-group">
 										<label for="companyname">Company Name</label>
-			                    	<input type="text" id="companyname" class="form-control" placeholder="Company Name">
+			                    	<input type="text" id="companyname" class="form-control" placeholder="Company Name" value="{{profile.company_name}}">
 			                  </div>
 			               </div>
-			               <div class="col-md-12">
-									<div class="form-group">
-										<label for="fname">Address</label>
-			                    	<input type="text" id="address" class="form-control" placeholder="Enter Your Address">
-			                  </div>
-			                  <div class="form-group">
-			                    	<input type="text" id="address2" class="form-control" placeholder="Second Address">
-			                  </div>
-			               </div>
-			               <div class="col-md-12">
-									<div class="form-group">
-										<label for="companyname">Town/City</label>
-			                    	<input type="text" id="towncity" class="form-control" placeholder="Town or City">
-			                  </div>
-			               </div>
-			               <div class="form-group">
-									<div class="col-md-6">
-										<label for="stateprovince">State/Province</label>
-										<input type="text" id="fname" class="form-control" placeholder="State Province">
-									</div>
-									<div class="col-md-6">
-										<label for="lname">Zip/Postal Code</label>
-										<input type="text" id="zippostalcode" class="form-control" placeholder="Zip / Postal">
-									</div>
-								</div>
 								<div class="form-group">
 									<div class="col-md-6">
 										<label for="email">E-mail Address</label>
-										<input type="text" id="email" class="form-control" placeholder="State Province">
+										<input type="text" id="email" class="form-control" placeholder="State Province" value="{{profile.email}}">
 									</div>
 									<div class="col-md-6">
 										<label for="Phone">Phone Number</label>
-										<input type="text" id="zippostalcode" class="form-control" placeholder="">
+										<input type="text" id="zippostalcode" class="form-control" placeholder="" value="{{profile.phone}}">
 									</div>
 								</div>
 								<div class="form-group">
@@ -106,17 +82,19 @@
 					</div>
 					<div class="col-md-5">
 						<div class="cart-detail">
-							<h2>Cart Total</h2>
+							<h2>Товары заказа</h2>
 							<ul>
 								<li>
-									<span>Subtotal</span> <span>$100.00</span>
+									<span>Subtotal</span> <span>$000.00</span>
 									<ul>
-										<li><span>1 x Product Name</span> <span>$99.00</span></li>
-										<li><span>1 x Product Name</span> <span>$78.00</span></li>
+										{% for item in items %}
+										<li><span>{{item.quantity}} x {{item.product}}</span> <span>${{item.price_sum}}</span></li>
+										{% endfor %}
 									</ul>
 								</li>
 								<li><span>Shipping</span> <span>$0.00</span></li>
-								<li><span>Order Total</span> <span>$180.00</span></li>
+								<li><span>Order Total</span> <span>${{total.price_sum__sum}}</span></li>
+
 							</ul>
 						</div>
 						<div class="cart-detail">
@@ -124,21 +102,21 @@
 							<div class="form-group">
 								<div class="col-md-12">
 									<div class="radio">
-									   <label><input type="radio" name="optradio">Direct Bank Tranfer</label>
+									   <label><input type="radio" name="optradio" {% ifequal profile.payment_method 'Direct Bank Tranfer' %}checked{% endifequal %}>Direct Bank Tranfer</label>
 									</div>
 								</div>
 							</div>
 							<div class="form-group">
 								<div class="col-md-12">
 									<div class="radio">
-									   <label><input type="radio" name="optradio">Check Payment</label>
+									   <label><input type="radio" name="optradio" {% ifequal profile.payment_method 'Check Payment' %}checked{% endifequal %}>Check Payment</label>
 									</div>
 								</div>
 							</div>
 							<div class="form-group">
 								<div class="col-md-12">
 									<div class="radio">
-									   <label><input type="radio" name="optradio">Paypal</label>
+									   <label><input type="radio" name="optradio" {% ifequal profile.payment_method 'Paypal' %}checked{% endifequal %}>Paypal</label>
 									</div>
 								</div>
 							</div>

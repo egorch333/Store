@@ -185,10 +185,12 @@ class CheckoutDetail(View):
         item = CartItem.objects.filter(cart__user=request.user, cart=order.cart)
 
         """сборка всех данных"""
-        data = {}
-        data['profile'] = profile
-        data['item'] = item
+        context = {}
+        context['profile'] = profile
+        context['items'] = item
+        context['total'] = CartItem.objects.filter(cart__user=request.user, cart=order.cart).aggregate(
+            Sum('price_sum'))
 
-        print(data)
+        print(context)
 
-        return render(request, "shop/checkout.html", data)
+        return render(request, "shop/checkout.html", context)
