@@ -14,5 +14,6 @@ urlpatterns = [
     path("search/", views.Search.as_view(), name="search"),
     path("category/<slug:slug>/", views.CategoryProduct.as_view(), name="category"),
     path("checkout/<int:pk>/", views.CheckoutDetail.as_view(), name="checkout"),
+    path("sort/", views.SortProducts.as_view(), name="sort"),
 ]
 
