@@ -1,4 +1,4 @@
-{% extends 'shop/base.html' %}
+{% extends 'userconf/base.html' %}
 {% load staticfiles %}
 {% block content %}
     <div class="colorlib-shop">
@@ -15,7 +15,7 @@
                 {% endif %}
 				<div class="row">
 					<div class="col-md-7">
-						<form method="post" action="{% url 'profile_edit' %}" class="colorlib-form">
+						<form method="post" action="{% url 'edit' %}" class="colorlib-form">
 							<h2>Billing Details</h2>
 		              	    <div class="row">
                                 {% csrf_token %}

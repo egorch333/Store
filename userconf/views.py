@@ -5,29 +5,27 @@ from django.views.generic import ListView, DetailView, TemplateView
 from django.views.generic.base import View
 
 
+from Store import settings
 from .models import *
 from .form import *
-
-
-from django.http import HttpResponse
-
-def home(request) :
-    return HttpResponse("HelloWorld")
-    # print('HelloWorld')
 
 
 class ProfileDetail(TemplateView):
     """Карточка товара"""
     model = Conf
     context_object_name = 'profile'
-    template_name = 'Profile/profile.html'
+    template_name = 'userconf/profile.html'
     # form_class = CartItemForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["profile"] = data = Conf.objects.get(user=self.request.user)
-        """заполняю форму данными из базы instance, initial - для вставки простого словаря"""
-        context["form"] = ProfileForm(instance=data)
+
+        try:
+            context["profile"] = data = Conf.objects.get(user=self.request.user)
+            """заполняю форму данными из базы instance, initial - для вставки простого словаря"""
+            context["form"] = ConfForm(instance=data)
+        except Conf.DoesNotExist:
+            context["form"] = ''
         return context
 
 

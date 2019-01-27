@@ -8,6 +8,7 @@ from django.db.models import Q
 
 
 from Store import settings
+from userconf.models import Conf
 from .models import *
 from .form import *
 
@@ -154,9 +155,9 @@ class CheckoutDetail(View):
         user = User.objects.get(username=request.user)
 
         try:
-            profile = Profile.objects.get(user=request.user)
-        except Profile.DoesNotExist:
-            profile = Profile(
+            profile = Conf.objects.get(user=request.user)
+        except Conf.DoesNotExist:
+            profile = Conf(
                 user = request.user,
                 first_name = user.first_name,
                 last_name = user.last_name,
@@ -165,7 +166,7 @@ class CheckoutDetail(View):
             profile.save()
 
         """получаю все данные пользователя"""
-        profile = Profile.objects.get(user=request.user)
+        profile = Conf.objects.get(user=request.user)
 
         """товары в корзине"""
         order = Order.objects.get(pk=pk)
