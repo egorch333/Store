@@ -35,17 +35,25 @@ class ProfileEdit(View):
         user = request.user
         if(user is not None):
             """запись в бд"""
+            form = ConfForm(request.POST)
+            # check whether it's valid:
+            """внутрення проверка формы"""
+            if form.is_valid():
+                """вытягиваю все данные формы"""
+                data = form.cleaned_data
 
-            profile = Conf.objects.get(user=user)
-            profile.phone = request.POST.get("phone", None)
-            profile.company_name = request.POST.get("company_name", None)
-            profile.payment_method = request.POST.get("payment_method", None)
-            profile.first_name = request.POST.get("first_name", None)
-            profile.last_name = request.POST.get("last_name", None)
-            profile.address = request.POST.get("address", None)
-            profile.email = request.POST.get("email", None)
-            profile.save()
-            messages.add_message(request, settings.MY_INFO, "Изменения внесены")
+                try:
+                    profile = Conf.objects.get(user=request.user)
+                    Conf.objects.filter(user=request.user).update(**data)
+                except Conf.DoesNotExist:
+                    """добавляю пользователя"""
+                    data["user"] = request.user
+                    profile = Conf(**data)
+                    profile.save()
+
+                messages.add_message(request, settings.MY_INFO, "Изменения внесены")
+            else:
+                messages.add_message(request, settings.MY_INFO, "Ошибка при записи данных")
         else:
             messages.add_message(request, settings.MY_INFO, "Ошибка нет такого пользователя")
         return redirect("profile")
