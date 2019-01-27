@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 from django import forms
-from .models import CartItem, Profile
+from .models import CartItem
 
 # class CartItemForm(forms.Form):
 #     error_css_class = 'error'
@@ -26,9 +26,3 @@ class CartItemForm(forms.ModelForm):
         fields = ("quantity",)
 
 
-class ProfileForm(forms.ModelForm):
-    """Форма профиля пользователя"""
-
-    class Meta:
-        model = Profile
-        fields = ("first_name","last_name","company_name","address","email","phone","payment_method")

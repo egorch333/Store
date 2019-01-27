@@ -6,7 +6,7 @@ from mptt.admin import MPTTModelAdmin
 from photologue.admin import GalleryAdmin as GalleryAdminDefault
 from photologue.models import Gallery
 
-from .models import Category, Product, Cart, CartItem, Order, Profile
+from .models import Category, Product, Cart, CartItem, Order
 
 
 
@@ -35,9 +35,7 @@ class OrderAdmin(admin.ModelAdmin):
     list_display = ['cart', 'accepted']
 
 
-class ProfileAdmin(admin.ModelAdmin):
-    # вывод названия в таблице
-    list_display = ['first_name', 'last_name', 'phone', 'email']
+
 
 
 class GalleryAdminForm(forms.ModelForm):
@@ -58,4 +56,3 @@ admin.site.register(Product)
 admin.site.register(Cart, CartAdmin)
 admin.site.register(CartItem, CartItemAdmin)
 admin.site.register(Order, OrderAdmin)
-admin.site.register(Profile, ProfileAdmin)
