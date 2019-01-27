@@ -18,18 +18,21 @@
                 <div class="row">
                     <div class="col-md-5">
                         <div class="product-entry">
-                            {% for img in product.gallery.photos.all %}
-                                <div class="product-img"
-                                     style="">
+                            {% with product.gallery.photos.all|first as big_img %}
+                                <div class="product-img" style="background-image: url({{ big_img.image.url }});">
                                     <p class="tag"><span class="sale">Sale</span></p>
                                 </div>
-                                <div class="thumb-nail">
-                                    <a href="#" class="thumb-img"
-                                       style="background-image: url({{ img.image.url }});"></a>
-                                </div>
-                            {% endfor %}
+                            {% endwith %}
+                            <div class="thumb-nail">
+                                {% for img in product.gallery.photos.all %}
+                                <a href="#" class="thumb-img" style="background-image: url({{ img.image.url }});"></a>
+                                {% endfor %}
+                            </div>
                         </div>
                     </div>
+
+
+
                     <div class="col-md-7">
                         <div class="desc">
                             <h3>{{ product.title }}</h3>
