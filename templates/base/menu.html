@@ -26,7 +26,7 @@
                             </ul>
                         </li>
                         <li class="has-dropdown">
-                            <a href="{% url 'profile' %}">Profile</a>
+                            <a href="{# url 'profile' #}">Profile</a>
                             <ul class="dropdown">
                                 {% if user.is_authenticated %}
                                     <li><a href="{% url 'cart_item' %}">Cart</a></li>

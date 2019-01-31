@@ -48,7 +48,11 @@ INSTALLED_APPS = [
     'sortedm2m',
     'mptt',
     'shop',
+
     'userconf',
+
+    # 'country',
+    # 'profiles',
 ]
 
 MIDDLEWARE = [
