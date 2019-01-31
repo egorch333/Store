@@ -8,7 +8,6 @@ from django.db.models import Q
 
 
 from Store import settings
-from userconf.models import Conf
 from .models import *
 from .form import *
 
@@ -148,38 +147,38 @@ class CategoryProduct(ListView):
         return products
 
 
-class CheckoutDetail(View):
-    """Оплата товара"""
-    def get(self, request, pk):
-        """подтягиваю данные пользователя"""
-        user = User.objects.get(username=request.user)
-
-        try:
-            profile = Conf.objects.get(user=request.user)
-        except Conf.DoesNotExist:
-            profile = Conf(
-                user = request.user,
-                first_name = user.first_name,
-                last_name = user.last_name,
-                email = user.email,
-            )
-            profile.save()
-
-        """получаю все данные пользователя"""
-        profile = Conf.objects.get(user=request.user)
-
-        """товары в корзине"""
-        order = Order.objects.get(pk=pk)
-        item = CartItem.objects.filter(cart__user=request.user, cart=order.cart)
-
-        """сборка всех данных"""
-        context = {}
-        context['profile'] = profile
-        context['items'] = item
-        context['total'] = CartItem.objects.filter(cart__user=request.user, cart=order.cart).aggregate(
-            Sum('price_sum'))
-
-        return render(request, "shop/checkout.html", context)
+# class CheckoutDetail(View):
+#     """Оплата товара"""
+#     def get(self, request, pk):
+#         """подтягиваю данные пользователя"""
+#         user = User.objects.get(username=request.user)
+#
+#         try:
+#             # profile = Conf.objects.get(user=request.user)
+#         except Conf.DoesNotExist:
+#             profile = Conf(
+#                 user = request.user,
+#                 first_name = user.first_name,
+#                 last_name = user.last_name,
+#                 email = user.email,
+#             )
+#             profile.save()
+#
+#         """получаю все данные пользователя"""
+#         profile = Conf.objects.get(user=request.user)
+#
+#         """товары в корзине"""
+#         order = Order.objects.get(pk=pk)
+#         item = CartItem.objects.filter(cart__user=request.user, cart=order.cart)
+#
+#         """сборка всех данных"""
+#         context = {}
+#         context['profile'] = profile
+#         context['items'] = item
+#         context['total'] = CartItem.objects.filter(cart__user=request.user, cart=order.cart).aggregate(
+#             Sum('price_sum'))
+#
+#         return render(request, "shop/checkout.html", context)
 
 
 
