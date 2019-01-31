@@ -51,8 +51,8 @@ INSTALLED_APPS = [
 
     'userconf',
 
-    # 'country',
-    # 'profiles',
+    'country',
+    'profiles',
 ]
 
 MIDDLEWARE = [
