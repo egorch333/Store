@@ -1,6 +1,5 @@
 from .models import Category
 
 def list_categoryes(request):
-    """Список категорий в меню
-    отображается на всех страницах"""
+    """Список категорий в меню"""
     return {"menu_categoryes": Category.objects.all()}

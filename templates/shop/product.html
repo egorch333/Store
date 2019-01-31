@@ -1,9 +1,0 @@
-{% extends 'shop/base.html' %}
-{% block content %}
-    {% for product in object_list %}
-    <h2>Название товара</h2>
-    <p>{{ product.title }}</p>
-    <p>{{ product.price }}</p>
-    <p>{{ product.description }}</p>
-    {% endfor %}
-{% endblock content %}

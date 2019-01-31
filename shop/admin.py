@@ -6,36 +6,23 @@ from mptt.admin import MPTTModelAdmin
 from photologue.admin import GalleryAdmin as GalleryAdminDefault
 from photologue.models import Gallery
 
-from .models import Category, Product, Cart, CartItem, Order
-
-
+from .models import (Category, Product, Cart, CartItem, Order)
 
 
 class CategoryMPTTModelAdmin(MPTTModelAdmin):
     mptt_level_indent = 20
-
-
-class CartAdmin(admin.ModelAdmin):
-    # вывод названия в таблице
-    list_display = ['user', 'accepted']
+    prepopulated_fields = {"slug": ("name",)}
 
 
 class ProductAdmin(admin.ModelAdmin):
-    # вывод названия в таблице
-    list_display = ['title', 'category', 'price', 'quantity']
+    """Продукты"""
+    list_display = ("title", "category", "price", "quantity")
+    prepopulated_fields = {"slug": ("title",)}
 
 
 class CartItemAdmin(admin.ModelAdmin):
-    # вывод названия в таблице
-    list_display = ['cart', 'product', 'quantity']
-
-
-class OrderAdmin(admin.ModelAdmin):
-    # вывод названия в таблице
-    list_display = ['cart', 'accepted']
-
-
-
+    """Товары в корзине"""
+    list_display = ("cart", "product", "quantity")
 
 
 class GalleryAdminForm(forms.ModelForm):
@@ -49,10 +36,18 @@ class GalleryAdminForm(forms.ModelForm):
 class GalleryAdmin(GalleryAdminDefault):
     form = GalleryAdminForm
 
+
+class CartAdmin(admin.ModelAdmin):
+    """Корзины"""
+    list_display = ("id", "user", "accepted")
+    list_display_links = ("user",)
+
+
 admin.site.unregister(Gallery)
 admin.site.register(Gallery, GalleryAdmin)
+
 admin.site.register(Category, CategoryMPTTModelAdmin)
-admin.site.register(Product)
+admin.site.register(Product, ProductAdmin)
 admin.site.register(Cart, CartAdmin)
 admin.site.register(CartItem, CartItemAdmin)
-admin.site.register(Order, OrderAdmin)
+admin.site.register(Order)

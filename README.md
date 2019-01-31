@@ -28,3 +28,7 @@ source venv3.5/bin/activate
 _проникаю в проект и запускаю django server_
 
 python manage.py runserver
+
+_создание нового приложения в корне основного приложения_
+
+python manage.py startapp app_name

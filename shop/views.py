@@ -1,33 +1,28 @@
+import json
+from django.core import serializers
 from django.contrib import messages
-from django.contrib.auth.models import User
+from django.core.paginator import Paginator
+from django.db.models import Q, Sum
+from django.forms.models import model_to_dict
+from django.http import JsonResponse, HttpResponse
 from django.shortcuts import render, redirect
-from django.views.generic import ListView, DetailView, TemplateView
+from django.views.generic import ListView, DetailView
 from django.views.generic.base import View
-from django.db.models import Sum
-from django.db.models import Q
-
 
 from Store import settings
-from .models import *
-from .form import *
 
+from profiles.models import Profile
+from profiles.forms import ProfileForm
 
-
+from .models import (Product, Cart, CartItem, Order, Category)
+from .forms import CartItemForm
+from .serializers import ProductSer
 
 class ProductsList(ListView):
     """Список всех продуктов"""
     model = Product
-    context_object_name = 'object_list'
     template_name = "shop/list-product.html"
-
-
-class Search(View):
-    """Поиск товаров"""
-    def get(self, request):
-        search = request.GET.get("search", None)
-        products = Product.objects.filter(Q(title__icontains=search) |
-                                          Q(category__name__icontains=search))
-        return render(request, "shop/list-product.html", {"object_list": products})
+    paginate_by = 5
 
 
 class ProductDetail(DetailView):
@@ -35,7 +30,6 @@ class ProductDetail(DetailView):
     model = Product
     context_object_name = 'product'
     template_name = 'shop/product-detail.html'
-    form_class = CartItemForm
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -68,15 +62,16 @@ class AddCartItem(View):
 class CartItemList(ListView):
     """Товары в корзине подьзователя"""
     template_name = 'shop/cart.html'
+    cart_items = ''
 
     def get_queryset(self):
-        return CartItem.objects.filter(cart__user=self.request.user, cart__accepted=False)
+        self.cart_items = CartItem.objects.filter(cart__user=self.request.user, cart__accepted=False)
+        return self.cart_items
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["cart_id"] = Cart.objects.get(user=self.request.user, accepted=False).id
-        context['total'] = CartItem.objects.filter(cart__user=self.request.user, cart__accepted=False).aggregate(
-            Sum('price_sum'))
+        context["total"] = self.cart_items.aggregate(Sum('price_sum'))
         return context
 
 
@@ -99,6 +94,21 @@ class RemoveCartItem(View):
         return redirect("cart_item")
 
 
+class Search(View):
+    """Поиск товаров"""
+    def get(self, request):
+        search = request.GET.get("search", None)
+        products = Product.objects.filter(Q(title__icontains=search) |
+                                          Q(category__name__icontains=search))
+
+        paginator = Paginator(products, 5)
+        page = request.GET.get('page')
+        page_obj = paginator.get_page(page)
+        context = {"object_list": products, "page_obj": page_obj}
+
+        return render(request, "shop/list-product.html", context)
+
+
 class AddOrder(View):
     """Создание заказа"""
     def post(self, request):
@@ -113,29 +123,41 @@ class AddOrder(View):
 class OrderList(ListView):
     """Список заказов пользователя"""
     template_name = "shop/order-list.html"
+    order = ''
 
     def get_queryset(self):
-        return Order.objects.filter(cart__user=self.request.user, accepted=False)
+        self.order = Order.objects.filter(cart__user=self.request.user, accepted=False)
+        return self.order
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["total"] = self.order.aggregate(Sum('cart__cartitem__price_sum'))
+        return context
 
     def post(self, request):
+        """Удаление заказа"""
         order = Order.objects.get(id=request.POST.get("pk"), cart__user=request.user, accepted=False)
+        Cart.objects.get(order__id=order.id, user=request.user, accepted=True).delete()
         order.delete()
-
-        """удаление корзины"""
-        cart = Cart.objects.get(id=order.cart.id)
-        cart.delete()
-
-        """создается новая корзина при добавлении товара в корзину
-        нижняя строка выдаст ошибку, две записи в Cart с accepted=FALSE быть не должно
-        Cart.objects.create(user=request.user)        
-        """
-
         return redirect("orders")
+
+
+class CheckOut(View):
+    """Оплата заказа"""
+    def get(self, request, pk):
+        order = Order.objects.filter(
+            id=pk,
+            cart__user=request.user,
+            accepted=False
+        ).aggregate(Sum('cart__cartitem__price_sum'))
+        form = ProfileForm(instance=Profile.objects.get(user=request.user))
+        return render(request, 'shop/checkout.html', {"order": order, "form": form})
 
 
 class CategoryProduct(ListView):
     """Список товаров из категории"""
     template_name = "shop/list-product.html"
+    paginate_by = 5
 
     def get_queryset(self):
         slug = self.kwargs.get("slug")
@@ -147,52 +169,17 @@ class CategoryProduct(ListView):
         return products
 
 
-# class CheckoutDetail(View):
-#     """Оплата товара"""
-#     def get(self, request, pk):
-#         """подтягиваю данные пользователя"""
-#         user = User.objects.get(username=request.user)
-#
-#         try:
-#             # profile = Conf.objects.get(user=request.user)
-#         except Conf.DoesNotExist:
-#             profile = Conf(
-#                 user = request.user,
-#                 first_name = user.first_name,
-#                 last_name = user.last_name,
-#                 email = user.email,
-#             )
-#             profile.save()
-#
-#         """получаю все данные пользователя"""
-#         profile = Conf.objects.get(user=request.user)
-#
-#         """товары в корзине"""
-#         order = Order.objects.get(pk=pk)
-#         item = CartItem.objects.filter(cart__user=request.user, cart=order.cart)
-#
-#         """сборка всех данных"""
-#         context = {}
-#         context['profile'] = profile
-#         context['items'] = item
-#         context['total'] = CartItem.objects.filter(cart__user=request.user, cart=order.cart).aggregate(
-#             Sum('price_sum'))
-#
-#         return render(request, "shop/checkout.html", context)
-
-
-
 class SortProducts(View):
     """Фильтр товаров"""
-
     def get(self, request):
-        category = request.GET.get("category", None)
-        price_1 = request.GET.get("price1", 0)
-        price_2 = request.GET.get("price2", 10000000000000)
-        availability = request.GET.get("availability", None)
-        print(price_2)
-        print(type(price_2))
+        return render(request, "shop/vue/list-product-vue.html")
 
+    def post(self, request):
+        category = request.POST.get("category", None)
+        price_1 = request.POST.get("price1", 0)
+        price_2 = request.POST.get("price2", 10000000000000)
+        availability = request.POST.get("availability", None)
+        print(category)
         filt = []
 
         if category:
@@ -214,4 +201,15 @@ class SortProducts(View):
 
         sort = Product.objects.filter(*filt)
         print(sort)
-        return render(request, "shop/list-product.html", {"object_list": sort})
+        # dict_obj = model_to_dict(sort)
+
+        # products_sort = serializers.serialize("json", sort)
+        # return JsonResponse({"products": products_sort}, safe=False)
+        # data = json.dumps(dict_obj)
+        serializers = ProductSer(sort, many=True)
+        return JsonResponse(serializers.data, safe=False)
+
+
+
+
+

@@ -5,37 +5,38 @@
     <meta charset="UTF-8">
     <title>Title</title>
 
-    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto:100,300,400,500,700"
+          rel="stylesheet">
 
-	<!-- Animate.css -->
-	<link rel="stylesheet" href="{% static 'css/animate.css' %}">
-	<!-- Icomoon Icon Fonts-->
-	<link rel="stylesheet" href="{% static 'css/icomoon.css' %}">
-	<!-- Bootstrap  -->
-	<link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <!-- Animate.css -->
+    <link rel="stylesheet" href="{% static 'css/animate.css' %}">
+    <!-- Icomoon Icon Fonts-->
+    <link rel="stylesheet" href="{% static 'css/icomoon.css' %}">
+    <!-- Bootstrap  -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
 
-	<!-- Magnific Popup -->
-	<link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
+    <!-- Magnific Popup -->
+    <link rel="stylesheet" href="{% static 'css/magnific-popup.css' %}">
 
-	<!-- Flexslider  -->
-	<link rel="stylesheet" href="{% static 'css/flexslider.css' %}">
+    <!-- Flexslider  -->
+    <link rel="stylesheet" href="{% static 'css/flexslider.css' %}">
 
-	<!-- Owl Carousel -->
-	<link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
-	<link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
+    <!-- Owl Carousel -->
+    <link rel="stylesheet" href="{% static 'css/owl.carousel.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/owl.theme.default.min.css' %}">
 
-	<!-- Date Picker -->
-	<link rel="stylesheet" href="{% static 'css/bootstrap-datepicker.css' %}">
-	<!-- Flaticons  -->
-	<link rel="stylesheet" href="{% static 'fonts/flaticon/font/flaticon.css' %}">
+    <!-- Date Picker -->
+    <link rel="stylesheet" href="{% static 'css/bootstrap-datepicker.css' %}">
+    <!-- Flaticons  -->
+    <link rel="stylesheet" href="{% static 'fonts/flaticon/font/flaticon.css' %}">
 
-	<!-- Theme style  -->
-	<link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <!-- Theme style  -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
 
-	<!-- Modernizr JS -->
-	<script src="{% static 'js/modernizr-2.6.2.min.js' %}"></script>
-	<!-- FOR IE9 below -->
-	<!--[if lt IE 9]>
+    <!-- Modernizr JS -->
+    <script src="{% static 'js/modernizr-2.6.2.min.js' %}"></script>
+    <!-- FOR IE9 below -->
+    <!--[if lt IE 9]>
 	<script src="{% static 'js/respond.min.js' %}"></script>
 	<![endif]-->
 </head>
@@ -51,131 +52,35 @@
             {% endblock content %}
         </div>
     </div>
+
     {% include 'base/footer.html' %}
 </div>
-
-    <!-- jQuery -->
-	<script src="{% static 'js/jquery.min.js' %}"></script>
-	<!-- jQuery Easing -->
-	<script src="{% static 'js/jquery.easing.1.3.js' %}"></script>
-	<!-- Bootstrap -->
-	<script src="{% static 'js/bootstrap.min.js' %}"></script>
-	<!-- Waypoints -->
-	<script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
-	<!-- Flexslider -->
-	<script src="{% static 'js/jquery.flexslider-min.js' %}"></script>
-	<!-- Owl carousel -->
-	<script src="{% static 'js/owl.carousel.min.js' %}"></script>
-	<!-- Magnific Popup -->
-	<script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
-	<script src="{% static 'js/magnific-popup-options.js' %}"></script>
-	<!-- Date Picker -->
+<script src="https://cdn.jsdelivr.net/npm/js-cookie@2/src/js.cookie.min.js"></script>
+<script src="{% static 'js/vue.js' %}"></script>
+<!-- jQuery -->
+<script src="{% static 'js/jquery.min.js' %}"></script>
+<!-- jQuery Easing -->
+<script src="{% static 'js/jquery.easing.1.3.js' %}"></script>
+<!-- Bootstrap -->
+<script src="{% static 'js/bootstrap.min.js' %}"></script>
+<!-- Waypoints -->
+<script src="{% static 'js/jquery.waypoints.min.js' %}"></script>
+<!-- Flexslider -->
+<script src="{% static 'js/jquery.flexslider-min.js' %}"></script>
+<!-- Owl carousel -->
+<script src="{% static 'js/owl.carousel.min.js' %}"></script>
+<!-- Magnific Popup -->
+<script src="{% static 'js/jquery.magnific-popup.min.js' %}"></script>
+<script src="{% static 'js/magnific-popup-options.js' %}"></script>
+<!-- Date Picker -->
 <script src="{% static 'js/bootstrap-datepicker.js' %}"></script>
 <!-- Stellar Parallax -->
 <script src="{% static 'js/jquery.stellar.min.js' %}"></script>
 <!-- Main -->
 <script src="{% static 'js/main.js' %}"></script>
+
+
+{% block script_vue %}
+{% endblock script_vue %}
 </body>
 </html>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<script>
-		$(document).ready(function(){
-			$(".quantity-left-minus").click(function () {
-			  var value = $(".input-number").val();
-			  value = parseInt(value);
-
-			  if(value > 1){
-			  	value -= 1;
-			  	$(".input-number").val(value);
-			  }
-			  // блокировка перехода на другую страницу
-			  return false;
-			});
-
-			$(".quantity-right-plus").click(function () {
-			  var value = $(".input-number").val();
-			  value = parseInt(value);
-				value += 1;
-				$(".input-number").val(value);
-
-			  // блокировка перехода на другую страницу
-			  return false;
-			});
-
-			//смена количества товара в корзине
-			$("input#quantity").change(function() {
-			  var value = $(this).val();
-			  var id = $(this).attr("data-id-cart");
-				$("#idcart" + id).attr("data-quantity", value);
-			});
-
-			//нажатие на значок редактирование в корзине
-			$("a[id ^='idcart']").click(function () {
-			  var href = $(this).attr('href');
-			  var quantity = $(this).attr('data-quantity');
-
-			  //разборка урла
-			  var arr = href.split('/');
-			  console.log(arr);
-			  var url = '';
-			  var i = 0;
-
-			  //сборка урла
-			  while(i < 4){
-			  	console.log(arr[i]);
-			  	url += arr[i] + '/'
-			  	i++;
-			  }
-
-			  url = url + quantity;
-			  console.log(url);
-			  $(location).attr('href',url);
-			  return false;
-			});
-		});
-	</script>

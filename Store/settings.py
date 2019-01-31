@@ -43,14 +43,16 @@ INSTALLED_APPS = [
     'allauth.account',
     'allauth.socialaccount',
     'allauth.socialaccount.providers.vk',
+
     'bootstrap4',
+
     'photologue',
     'sortedm2m',
+
+    'rest_framework',
+
     'mptt',
     'shop',
-
-    'userconf',
-
     'country',
     'profiles',
 ]
