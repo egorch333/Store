@@ -16,4 +16,5 @@ urlpatterns = [
     path("checkout/<int:pk>/", views.CheckOut.as_view(), name="checkout"),
     path("category/<slug:slug>/", views.CategoryProduct.as_view(), name="category"),
     path("sort/", views.SortProducts.as_view(), name="sort"),
+    path("sort-jquery/", views.SortProductsJquery.as_view(), name="sort_jquery"),
 ]

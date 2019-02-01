@@ -210,6 +210,53 @@ class SortProducts(View):
         return JsonResponse(serializers.data, safe=False)
 
 
+class SortProductsJquery(View):
+    """Фильтр товаров"""
+
+    def get(self, request):
+        if request.GET.get('category'):
+            product = Product.objects.filter(category__name=request.GET.get('category'))
+        else:
+            product = Product.objects.all()
+        return render(request, "shop/list-product.html", {"object_list": product})
+
+
+    def post(self, request):
+        category = request.POST.get("category", None)
+        price_1 = request.POST.get("price1", 0)
+        price_2 = request.POST.get("price2", 10000000000000)
+        availability = request.POST.get("availability", None)
+        print(category)
+        filt = []
+
+        if category:
+            cat = Q()
+            cat &= Q(category__name__icontains=category)
+            filt.append(cat)
+        if price_1 or price_2:
+            price = Q()
+            price &= Q(price__gte=int(price_1)) & Q(price__lte=int(price_2))
+            filt.append(price)
+        if availability:
+            if availability == "False":
+                avail = False
+            elif availability == "True":
+                avail = True
+            availability = Q()
+            availability &= Q(availability=avail)
+            filt.append(availability)
+
+        sort = Product.objects.filter(*filt)
+        print(sort)
+        # dict_obj = model_to_dict(sort)
+
+        # products_sort = serializers.serialize("json", sort)
+        # return JsonResponse({"products": products_sort}, safe=False)
+        # data = json.dumps(dict_obj)
+        serializers = ProductSer(sort, many=True)
+        return JsonResponse(serializers.data, safe=False)
+
+
 
 
 
