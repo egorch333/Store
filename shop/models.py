@@ -27,7 +27,7 @@ class Category(MPTTModel):
         return self.name
 
 
-class Vote1(models.Model):
+class Rating(models.Model):
     """Рейтинг товара"""
     # рейтинг
     rating_prod = models.IntegerField(default=0)
@@ -38,6 +38,9 @@ class Vote1(models.Model):
     class Meta:
         verbose_name = 'Рейтинг'
         verbose_name_plural = 'Рейтинги'
+
+    def __str__(self):
+        return "{}".format(self.rating_result)
 
 
 class Product(models.Model):
@@ -60,7 +63,7 @@ class Product(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True)
-    vote = models.OneToOneField(Vote1,
+    rating = models.OneToOneField(Rating,
         verbose_name="рейтинг",
         on_delete=models.CASCADE,
         blank=True,
@@ -130,10 +133,10 @@ def create_user_cart(sender, instance, created, **kwargs):
 
 @receiver(post_save, sender=Product)
 def create_vote_product(sender, instance, created, **kwargs):
-    """рейтинга для товара"""
+    """рейтинг для товара"""
     if created:
         Product.objects.filter(id=instance.id).update(vote=instance.id)
-        Vote1.objects.create(id=instance.id)
+        Rating.objects.create(id=instance.id)
 
 
 

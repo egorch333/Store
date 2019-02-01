@@ -6,7 +6,7 @@ from mptt.admin import MPTTModelAdmin
 from photologue.admin import GalleryAdmin as GalleryAdminDefault
 from photologue.models import Gallery
 
-from .models import (Category, Product, Cart, CartItem, Order, Vote1)
+from .models import (Category, Product, Cart, CartItem, Order, Rating)
 
 
 class CategoryMPTTModelAdmin(MPTTModelAdmin):
@@ -16,7 +16,7 @@ class CategoryMPTTModelAdmin(MPTTModelAdmin):
 
 class ProductAdmin(admin.ModelAdmin):
     """Продукты"""
-    list_display = ("title", "category", "price", "quantity")
+    list_display = ("title", "category", "price", "quantity", "rating")
     prepopulated_fields = {"slug": ("title",)}
 
 
@@ -51,4 +51,4 @@ admin.site.register(Product, ProductAdmin)
 admin.site.register(Cart, CartAdmin)
 admin.site.register(CartItem, CartItemAdmin)
 admin.site.register(Order)
-admin.site.register(Vote1)
+admin.site.register(Rating)
