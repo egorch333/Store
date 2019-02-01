@@ -27,6 +27,19 @@ class Category(MPTTModel):
         return self.name
 
 
+class Vote1(models.Model):
+    """Рейтинг товара"""
+    # рейтинг
+    rating_prod = models.IntegerField(default=0)
+    q_vote = models.IntegerField(default=0)
+    rating_result = models.IntegerField(default=0, help_text='рейтинг 0-5', verbose_name='рейтинг')
+    # date_create = models.DateTimeField("Дата", default=timezone.now())
+
+    class Meta:
+        verbose_name = 'Рейтинг'
+        verbose_name_plural = 'Рейтинги'
+
+
 class Product(models.Model):
     """Модель товара"""
     category = models.ForeignKey(Category, verbose_name="Категория", on_delete=models.CASCADE)
@@ -47,6 +60,12 @@ class Product(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True)
+    vote = models.OneToOneField(Vote1,
+        verbose_name="рейтинг",
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True)
+
 
     class Meta:
         verbose_name = "Товар"
@@ -107,6 +126,14 @@ def create_user_cart(sender, instance, created, **kwargs):
     """Создание корзины пользователя"""
     if created:
         Cart.objects.create(user=instance)
+
+
+@receiver(post_save, sender=Product)
+def create_vote_product(sender, instance, created, **kwargs):
+    """рейтинга для товара"""
+    if created:
+        Product.objects.filter(id=instance.id).update(vote=instance.id)
+        Vote1.objects.create(id=instance.id)
 
 
 

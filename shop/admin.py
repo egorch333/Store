@@ -6,7 +6,7 @@ from mptt.admin import MPTTModelAdmin
 from photologue.admin import GalleryAdmin as GalleryAdminDefault
 from photologue.models import Gallery
 
-from .models import (Category, Product, Cart, CartItem, Order)
+from .models import (Category, Product, Cart, CartItem, Order, Vote1)
 
 
 class CategoryMPTTModelAdmin(MPTTModelAdmin):
@@ -51,3 +51,4 @@ admin.site.register(Product, ProductAdmin)
 admin.site.register(Cart, CartAdmin)
 admin.site.register(CartItem, CartItemAdmin)
 admin.site.register(Order)
+admin.site.register(Vote1)
