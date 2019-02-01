@@ -101,14 +101,13 @@ $(document).ready(function(){
     });
 
     $("#sort-product").click(function () {
+      //сортировка по фильтрам
       var data = {};
       data.category = category;
-      data.price_from = +$("select#price-from option:selected").text();
-      data.price_to = +$("select#price-to option:selected").text();
+      data.price1 = +$("select#price-from option:selected").text();
+      data.price2 = +$("select#price-to option:selected").text();
       data.availability = availability;
       data.url = "http://127.0.0.1:8000/sort-jquery/";
-
-      console.log(data);
 
       $.ajax({
         url: this.url,
@@ -119,22 +118,8 @@ $(document).ready(function(){
             $("#product-list").empty();
 
             var i = 0;
+            //циклом вывожу картинки
             while(i < response.length){
-                console.log(response[i].photo.image);
-
-                /*
-                приходят данные
-                availability: true
-                category: 3
-                description: "test2 desc"
-                gallery: null
-                photo: null
-                price: 10000
-                quantity: 1
-                slug: "test2"
-                title: "Test2"
-                */
-
                 var list = '<div class="col-md-4 text-center">\
                                 <div class="product-entry">\
                                     <div class="product-img"\
@@ -161,7 +146,6 @@ $(document).ready(function(){
             }
         }
       })
-
 
       // блокировка перехода на другую страницу
       return false;

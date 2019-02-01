@@ -214,10 +214,7 @@ class SortProductsJquery(View):
     """Фильтр товаров"""
 
     def get(self, request):
-        if request.GET.get('category'):
-            product = Product.objects.filter(category__name=request.GET.get('category'))
-        else:
-            product = Product.objects.all()
+        product = Product.objects.all()
         return render(request, "shop/list-product.html", {"object_list": product})
 
 
