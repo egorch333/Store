@@ -18,11 +18,11 @@ from .models import CartItem
 #                                         'max': '100'}),
 #     )
 
-class CartItemForm(forms.ModelForm):
-    """Форма добавления товара"""
-
-    class Meta:
-        model = CartItem
-        fields = ("quantity",)
+# class CartItemForm(forms.ModelForm):
+#     """Форма добавления товара"""
+#
+#     class Meta:
+#         model = CartItem
+#         fields = ("quantity",)
 
 

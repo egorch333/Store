@@ -14,8 +14,8 @@ from Store import settings
 from profiles.models import Profile
 from profiles.forms import ProfileForm
 
-from .models import (Product, Cart, CartItem, Order, Category, Rating)
-from .forms import CartItemForm
+from .models import (Product, Cart, CartItem, Order, Category, Rating, Comment)
+from .forms import CartItemForm, CommentForm
 from .serializers import ProductSer
 
 class ProductsList(ListView):
@@ -34,6 +34,9 @@ class ProductDetail(DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context["form"] = CartItemForm()
+        context["form_comment"] = CommentForm()
+        context["user"] = self.request.user
+        context["comments"] = Comment.objects.filter(product=context['product'].id)
         return context
 
 
@@ -276,5 +279,15 @@ class AddRatingProduct(View):
         return redirect("/detail/{}/".format(slug))
 
 
+
+class AddCommentProduct(View):
+    """Комментарии к товарам"""
+
+    def post(self, request, pk, slug):
+        text = request.POST.get('text', None)
+
+        if text is not None:
+            Comment.objects.create(product_id=int(pk), text=text, user=self.request.user)
+        return redirect("/detail/{}/".format(slug))
 
 
