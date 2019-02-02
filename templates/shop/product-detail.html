@@ -36,13 +36,13 @@
                             <p class="price">
                                 <span>${{ product.price }}</span>
                                 <span class="rate text-right">
-                                    <i class="icon-star-full"></i>
-                                    <i class="icon-star-full"></i>
-                                    <i class="icon-star-full"></i>
-                                    <i class="icon-star-full"></i>
-                                    <i class="icon-star-half"></i>
-												(74 Rating)
-											</span>
+                                    <a href="{% url 'add_rating' product.slug 1 %}"><i class="icon-star-full"></i></a>
+                                    <a href="{% url 'add_rating' product.slug 2 %}"><i class="icon-star-full"></i></a>
+                                    <a href="{% url 'add_rating' product.slug 3 %}"><i class="icon-star-full"></i></a>
+                                    <a href="{% url 'add_rating' product.slug 4 %}"><i class="icon-star-full"></i></a>
+                                    <a href="{% url 'add_rating' product.slug 5 %}"><i class="icon-star-half"></i></a>
+								(74 Rating)
+                                </span>
                             </p>
                             <p>{{ product.description }}</p>
                             <div class="color-wrap">

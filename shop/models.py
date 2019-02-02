@@ -66,8 +66,8 @@ class Product(models.Model):
     rating = models.OneToOneField(Rating,
         verbose_name="рейтинг",
         on_delete=models.CASCADE,
-        blank=True,
-        null=True)
+        null=True,
+        blank=True)
 
 
     class Meta:
@@ -135,7 +135,7 @@ def create_user_cart(sender, instance, created, **kwargs):
 def create_vote_product(sender, instance, created, **kwargs):
     """рейтинг для товара"""
     if created:
-        Product.objects.filter(id=instance.id).update(vote=instance.id)
+        Product.objects.filter(id=instance.id).update(rating=instance.id)
         Rating.objects.create(id=instance.id)
 
 

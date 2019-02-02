@@ -14,7 +14,7 @@ from Store import settings
 from profiles.models import Profile
 from profiles.forms import ProfileForm
 
-from .models import (Product, Cart, CartItem, Order, Category)
+from .models import (Product, Cart, CartItem, Order, Category, Rating)
 from .forms import CartItemForm
 from .serializers import ProductSer
 
@@ -253,6 +253,27 @@ class SortProductsJquery(View):
         serializers = ProductSer(sort, many=True)
         return JsonResponse(serializers.data, safe=False)
 
+
+class AddRatingProduct(View):
+    """Рейтинг товаров"""
+
+    def get(self, request, slug, rating):
+
+        product = Product.objects.get(slug=slug)
+        cur_rating = Rating.objects.get(pk=product.id)
+
+        # новый рейтинг
+        new_rating = cur_rating.rating_prod + int(rating)
+        new_q_vote = cur_rating.q_vote + 1
+        rating_result = new_rating / new_q_vote
+
+        cur_rating.rating_result = int(rating_result)
+        cur_rating.q_vote = new_q_vote
+        cur_rating.rating_prod = new_rating
+        cur_rating.save()
+
+        messages.add_message(request, settings.MY_INFO, "Ваш рейтинг учтён!")
+        return redirect("/detail/{}/".format(slug))
 
 
 
