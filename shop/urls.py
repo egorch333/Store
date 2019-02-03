@@ -18,4 +18,6 @@ urlpatterns = [
     path("sort/", views.SortProducts.as_view(), name="sort"),
     path("add-rating/<slug:slug>/<int:rating>/", views.AddRatingProduct.as_view(), name="add_rating"),
     path("add-comment/<int:pk>/<slug:slug>", views.AddCommentProduct.as_view(), name="add_comment"),
+    path("pay-order/<int:pk>/", views.PayOrder.as_view(), name="pay_order"),
+    path("okpay-order/<int:pk>/", views.OkPayOrder.as_view(), name="okpay_order"),
 ]

@@ -153,12 +153,19 @@ class OrderList(ListView):
 class CheckOut(View):
     """Оплата заказа"""
     def get(self, request, pk):
-        order = Order.objects.filter(
+        order = {}
+        order['item'] = Order.objects.get(
+            id=pk,
+            cart__user=request.user,
+            accepted=False
+        )
+        order['price'] = Order.objects.filter(
             id=pk,
             cart__user=request.user,
             accepted=False
         ).aggregate(Sum('cart__cartitem__price_sum'))
         form = ProfileForm(instance=Profile.objects.get(user=request.user))
+        print(order)
         return render(request, 'shop/checkout.html', {"order": order, "form": form})
 
 
@@ -257,3 +264,25 @@ class AddCommentProduct(View):
         return redirect("/detail/{}/".format(slug))
 
 
+class PayOrder(View):
+    """оплата заказа по кнопке"""
+    def get(self, request, pk):
+
+        order = Order.objects.get(id=int(pk), cart__user=request.user)
+        order.accepted = True
+        order.save()
+
+        return redirect("/okpay-order/{}/".format(pk))
+
+
+
+class OkPayOrder(DetailView):
+    """Оплаченный заказ вывод"""
+    model = Order
+    context_object_name = 'order'
+    template_name = 'shop/okpay-order.html'
+
+    def get_queryset(self):
+        pk = self.kwargs.get("pk")
+        order = Order.objects.filter(id=pk, cart__user=self.request.user, accepted=True)
+        return order
