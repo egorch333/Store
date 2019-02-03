@@ -41,8 +41,8 @@
                                     <a href="{% url 'add_rating' product.slug 3 %}"><i class="icon-star-full"></i></a>
                                     <a href="{% url 'add_rating' product.slug 4 %}"><i class="icon-star-full"></i></a>
                                     <a href="{% url 'add_rating' product.slug 5 %}"><i class="icon-star-half"></i></a>
-								(74 Rating)
-                                </span>
+												({{ product.rating }} Rating)
+											</span>
                             </p>
                             <p>{{ product.description }}</p>
                             <div class="color-wrap">
@@ -109,7 +109,7 @@
                         <div class="product-entry">
                             <h3>Комментарии</h3>
                             {% for comment in comments %}
-                            <p>{{comment.user}}</p>
+                            <p>{{comment.user}} | {{comment.create_date}}</p>
                             <p>{{comment.text}}</p>
                             <hr>
                             {% endfor %}

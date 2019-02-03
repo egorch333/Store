@@ -16,7 +16,7 @@ from profiles.forms import ProfileForm
 
 from .models import (Product, Cart, CartItem, Order, Category, Rating, Comment)
 from .forms import CartItemForm, CommentForm
-from .serializers import ProductSer
+from .serializers import ProductSer, CatSer
 
 class ProductsList(ListView):
     """Список всех продуктов"""
@@ -46,7 +46,11 @@ class AddCartItem(View):
         quantity = request.POST.get("quantity", None)
         if quantity is not None and int(quantity) > 0:
             try:
-                item = CartItem.objects.get(cart__user=request.user, product_id=pk)
+                # item = CartItem.objects.get(cart__user=request.user, product_id=pk)
+                item = CartItem.objects.get(
+                    cart__user=request.user,
+                    product_id=pk,
+                    cart__accepted=False)
                 item.quantity += int(quantity)
             except CartItem.DoesNotExist:
                 item = CartItem(
@@ -76,6 +80,7 @@ class CartItemList(ListView):
         context["cart_id"] = Cart.objects.get(user=self.request.user, accepted=False).id
         context["total"] = self.cart_items.aggregate(Sum('price_sum'))
         return context
+
 
 
 class EditCartItem(View):
@@ -179,10 +184,11 @@ class SortProducts(View):
 
     def post(self, request):
         category = request.POST.get("category", None)
-        price_1 = request.POST.get("price1", 0)
-        price_2 = request.POST.get("price2", 10000000000000)
+        price_1 = request.POST.get("price1", 1)
+        price_2 = request.POST.get("price2", 1000000000)
         availability = request.POST.get("availability", None)
-        print(category)
+        print(price_1)
+        print(price_2)
         filt = []
 
         if category:
@@ -203,58 +209,18 @@ class SortProducts(View):
             filt.append(availability)
 
         sort = Product.objects.filter(*filt)
+
+        category_ser = CatSer(Category.objects.filter(parent__isnull=True), many=True)
         print(sort)
-        # dict_obj = model_to_dict(sort)
-
-        # products_sort = serializers.serialize("json", sort)
-        # return JsonResponse({"products": products_sort}, safe=False)
-        # data = json.dumps(dict_obj)
         serializers = ProductSer(sort, many=True)
-        return JsonResponse(serializers.data, safe=False)
+        return JsonResponse(
+            {
+                "products": serializers.data,
+                "category": category_ser.data
+             },
+            safe=False)
 
 
-class SortProductsJquery(View):
-    """Фильтр товаров"""
-
-    def get(self, request):
-        product = Product.objects.all()
-        return render(request, "shop/list-product.html", {"object_list": product})
-
-
-    def post(self, request):
-        category = request.POST.get("category", None)
-        price_1 = request.POST.get("price1", 0)
-        price_2 = request.POST.get("price2", 10000000000000)
-        availability = request.POST.get("availability", None)
-        print(category)
-        filt = []
-
-        if category:
-            cat = Q()
-            cat &= Q(category__name__icontains=category)
-            filt.append(cat)
-        if price_1 or price_2:
-            price = Q()
-            price &= Q(price__gte=int(price_1)) & Q(price__lte=int(price_2))
-            filt.append(price)
-        if availability:
-            if availability == "False":
-                avail = False
-            elif availability == "True":
-                avail = True
-            availability = Q()
-            availability &= Q(availability=avail)
-            filt.append(availability)
-
-        sort = Product.objects.filter(*filt)
-        print(sort)
-        # dict_obj = model_to_dict(sort)
-
-        # products_sort = serializers.serialize("json", sort)
-        # return JsonResponse({"products": products_sort}, safe=False)
-        # data = json.dumps(dict_obj)
-        serializers = ProductSer(sort, many=True)
-        return JsonResponse(serializers.data, safe=False)
 
 
 class AddRatingProduct(View):
