@@ -32,3 +32,19 @@ python manage.py runserver
 _создание нового приложения в корне основного приложения_
 
 python manage.py startapp app_name
+
+_показ данных в json_
+
+python manage.py dumpdata profiles
+
+python manage.py dumpdata --format=xml
+
+python manage.py dumpdata --format=json
+
+_заходим в psql_
+
+python manage.py dbshell
+
+_показать миграции в виде списка_
+
+python manage.py showmigrations -l

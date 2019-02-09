@@ -38,15 +38,18 @@
                             </ul>
                         </li>
                         <li class="active"><a href="{% url 'sort' %}">Search</a></li>
-                        {% if user.is_authenticated %}
+
                             <li class="has-dropdown">
                                 <a href="#">Profile</a>
                                 <ul class="dropdown">
                                     <li><a href="{% url 'cart_item' %}">Cart</a></li>
                                     <li><a href="{% url 'orders' %}">Order</a></li>
+                                    {% if user.is_authenticated %}
                                     <li><a href="{% url 'profile' pk=user.id %}">Settings</a></li>
+                                    {% endif %}
                                 </ul>
                             </li>
+                        {% if user.is_authenticated %}
                             <li><a href="/accounts/logout/">Logout</a></li>
                             <li><a href="#">{{ user.username }}</a></li>
                         {% else %}
