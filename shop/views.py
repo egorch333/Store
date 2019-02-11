@@ -247,8 +247,10 @@ class CheckOut(View):
                 cart__anonym_key=anonym_key,
                 accepted=False
             ).aggregate(Sum('cart__cartitem__price_sum'))
+            order['anonym_key'] = anonym_key
             print(order)
-            form = ''
+            form = ProfileForm()
+            # form = ''
             return render(request, 'shop/checkout.html', {"order": order, "form": form})
 
 

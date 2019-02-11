@@ -13,7 +13,10 @@ class Profile(models.Model):
         User,
         verbose_name="Пользователь",
         related_name='user_profile',
-        on_delete=models.CASCADE)
+        on_delete=models.CASCADE,
+        null=True,
+        blank=True
+    )
     first_name = models.CharField("Имя", max_length=120, default="")
     last_name = models.CharField("Фамилия", max_length=120, default="")
     company_name = models.CharField("Компания", max_length=120, blank=True, default="")
@@ -38,6 +41,10 @@ class Profile(models.Model):
     address = models.CharField("Адрес", max_length=250, default="")
     postcode = models.CharField("Индекс", max_length=120, default="")
     phone = models.IntegerField("Телефон", default=790000000)
+    anonym_key = models.CharField("Анонимный ключ",
+                                  max_length=32,
+                                  null=True,
+                                  blank=True)
 
     class Meta:
         verbose_name = "Профиль"
