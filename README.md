@@ -21,6 +21,10 @@ _выполнение всех миграции_
 
 python manage.py migrate
 
+_фейковые миграции после восстановления базы_
+
+python manage.py migrate --fake
+
 _активация виртуальной машины_
 
 source venv3.5/bin/activate

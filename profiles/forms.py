@@ -17,5 +17,4 @@ class ProfileForm(forms.ModelForm):
             'city',
             'address',
             'postcode',
-            'phone',
-            'anonym_key')
+            'phone')

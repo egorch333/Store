@@ -6,7 +6,7 @@ from mptt.admin import MPTTModelAdmin
 from photologue.admin import GalleryAdmin as GalleryAdminDefault
 from photologue.models import Gallery
 
-from .models import (Category, Product, Cart, CartItem, Order, Rating)
+from .models import *
 
 
 class CategoryMPTTModelAdmin(MPTTModelAdmin):
@@ -16,9 +16,8 @@ class CategoryMPTTModelAdmin(MPTTModelAdmin):
 
 class ProductAdmin(admin.ModelAdmin):
     """Продукты"""
-    list_display = ("title", "category", "price", "quantity", "rating")
+    list_display = ("title", "category", "price", "quantity")
     prepopulated_fields = {"slug": ("title",)}
-    readonly_fields = ["rating"]
 
 
 class CartItemAdmin(admin.ModelAdmin):

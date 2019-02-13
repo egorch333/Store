@@ -15,9 +15,11 @@ urlpatterns = [
     path("orders/", views.OrderList.as_view(), name="orders"),
     path("checkout/<int:pk>/", views.CheckOut.as_view(), name="checkout"),
     path("category/<slug:slug>/", views.CategoryProduct.as_view(), name="category"),
+    path("category-vue/", views.CategoryProductVue.as_view(), name="category_vue"),
     path("sort/", views.SortProducts.as_view(), name="sort"),
+
     path("add-rating/<slug:slug>/<int:rating>/", views.AddRatingProduct.as_view(), name="add_rating"),
-    path("add-comment/<int:pk>/<slug:slug>", views.AddCommentProduct.as_view(), name="add_comment"),
-    path("pay-order/<int:pk>/", views.PayOrder.as_view(), name="pay_order"),
-    path("okpay-order/<int:pk>/", views.OkPayOrder.as_view(), name="okpay_order"),
+    # path("add-comment/<int:pk>/<slug:slug>", views.AddCommentProduct.as_view(), name="add_comment"),
+    # path("pay-order/<int:pk>/", views.PayOrder.as_view(), name="pay_order"),
+    # path("okpay-order/<int:pk>/", views.OkPayOrder.as_view(), name="okpay_order"),
 ]

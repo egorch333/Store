@@ -27,10 +27,12 @@
                                 {% recursetree menu_categoryes %}
                                     <div class="a-node">
                                         <a class="dropdown-item"
-                                           href="{% url 'category' slug=node.slug %}">{{ node.name }}</a>
+                                           href="/category-vue/?slug={{node.slug}}">
+                                            {{ node.name }}
+                                        </a>
                                         {% if not node.is_leaf_node %}
                                             <div class="a-child">
-                                                <a class="" href="#">{{ children }}</a>
+                                                {{ children }}
                                             </div>
                                         {% endif %}
                                     </div>
@@ -38,18 +40,15 @@
                             </ul>
                         </li>
                         <li class="active"><a href="{% url 'sort' %}">Search</a></li>
-
+                        {% if user.is_authenticated %}
                             <li class="has-dropdown">
                                 <a href="#">Profile</a>
                                 <ul class="dropdown">
                                     <li><a href="{% url 'cart_item' %}">Cart</a></li>
                                     <li><a href="{% url 'orders' %}">Order</a></li>
-                                    {% if user.is_authenticated %}
                                     <li><a href="{% url 'profile' pk=user.id %}">Settings</a></li>
-                                    {% endif %}
                                 </ul>
                             </li>
-                        {% if user.is_authenticated %}
                             <li><a href="/accounts/logout/">Logout</a></li>
                             <li><a href="#">{{ user.username }}</a></li>
                         {% else %}

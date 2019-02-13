@@ -41,8 +41,8 @@
                                     <a href="{% url 'add_rating' product.slug 3 %}"><i class="icon-star-full"></i></a>
                                     <a href="{% url 'add_rating' product.slug 4 %}"><i class="icon-star-full"></i></a>
                                     <a href="{% url 'add_rating' product.slug 5 %}"><i class="icon-star-half"></i></a>
-												({{ product.rating }} Rating)
-											</span>
+								    ({{ product.rating }} Rating)
+                                </span>
                             </p>
                             <p>{{ product.description }}</p>
                             <div class="color-wrap">
@@ -88,35 +88,6 @@
                         </div>
                     </div>
                 </div>
-
-                <div class="row">
-                    <div class="col-md-12">
-                        <form action="{% url 'add_comment' product.id product.slug %}" method="post">
-                            {% csrf_token %}
-                            <div class="product-entry">
-                                <br>
-                                <h3>Добавить комментарии</h3>
-                                <hr>
-                                <input type="text" value="{{ user }}" name="user" readonly>
-                            </div>
-                            <div class="product-entry">
-                                {{ form_comment.text }}
-                            </div>
-                            <button type="submit">отправить</button>
-                        </form>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="product-entry">
-                            <h3>Комментарии</h3>
-                            {% for comment in comments %}
-                            <p>{{comment.user}} | {{comment.create_date}}</p>
-                            <p>{{comment.text}}</p>
-                            <hr>
-                            {% endfor %}
-                        </div>
-                    </div>
-                 </div>
-
             </div>
         </div>
     </div>

@@ -33,7 +33,7 @@ class Rating(models.Model):
     rating_prod = models.IntegerField(default=0)
     q_vote = models.IntegerField(default=0)
     rating_result = models.IntegerField(default=0, help_text='рейтинг 0-5', verbose_name='рейтинг')
-    date_create = models.DateTimeField("Дата", default=timezone.now())
+    date_create = models.DateTimeField("Дата", auto_now_add=True)
 
     class Meta:
         verbose_name = 'Рейтинг'
@@ -63,11 +63,12 @@ class Product(models.Model):
         on_delete=models.SET_NULL,
         null=True,
         blank=True)
-    rating = models.OneToOneField(Rating,
-        verbose_name="рейтинг",
+    rating = models.OneToOneField(
+        Rating,
         on_delete=models.CASCADE,
         null=True,
-        blank=True)
+        blank=True
+    )
 
 
     class Meta:
@@ -80,16 +81,8 @@ class Product(models.Model):
 
 class Cart(models.Model):
     """Корзина"""
-    user = models.ForeignKey(User,
-                             verbose_name='Покупатель',
-                             on_delete=models.CASCADE,
-                             null=True,
-                             blank=True)
+    user = models.ForeignKey(User, verbose_name='Покупатель', on_delete=models.CASCADE)
     accepted = models.BooleanField(verbose_name='Принято к заказу', default=False)
-    anonym_key = models.CharField("Анонимный ключ",
-                                  max_length=32,
-                                  null=True,
-                                  blank=True)
 
     class Meta:
         verbose_name = 'Корзина'
@@ -132,25 +125,6 @@ class Order(models.Model):
         return "{}".format(self.cart)
 
 
-class Comment(models.Model):
-    product = models.ForeignKey(Product, on_delete=models.CASCADE, verbose_name='продукт')
-    user = models.ForeignKey(User, verbose_name='Покупатель', on_delete=models.CASCADE)
-    text = models.TextField(blank=True, verbose_name='текст')
-    create_date = models.DateTimeField(auto_now_add=True, verbose_name='дата создания')
-    # если нужно редактировать
-    # create_date.editable=True
-    change_date = models.DateTimeField(auto_now=True, verbose_name='время изменения')
-
-    # для админки и shell
-    def __str__(self):
-        return self.text
-
-    class Meta:
-        verbose_name = 'Комментарий к статье'
-        verbose_name_plural = 'Комментарии к статье'
-        ordering = ['-create_date']  # сортировка по умолчанию для всех страниц view
-
-
 @receiver(post_save, sender=User)
 def create_user_cart(sender, instance, created, **kwargs):
     """Создание корзины пользователя"""
@@ -164,7 +138,4 @@ def create_vote_product(sender, instance, created, **kwargs):
     if created:
         Product.objects.filter(id=instance.id).update(rating=instance.id)
         Rating.objects.create(id=instance.id)
-
-
-
 
