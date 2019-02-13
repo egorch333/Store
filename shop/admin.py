@@ -16,8 +16,9 @@ class CategoryMPTTModelAdmin(MPTTModelAdmin):
 
 class ProductAdmin(admin.ModelAdmin):
     """Продукты"""
-    list_display = ("title", "category", "price", "quantity")
+    list_display = ("title", "category", "price", "quantity", "rating")
     prepopulated_fields = {"slug": ("title",)}
+    readonly_fields = ["rating"]
 
 
 class CartItemAdmin(admin.ModelAdmin):
