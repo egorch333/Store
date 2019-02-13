@@ -11,6 +11,6 @@ __pycache__/
 
 media/
 
-/migrations/*
 */migrations/*
-*migrations/*
+#/migrations/*
+#*migrations/*
