@@ -40,11 +40,12 @@ class SimpleTest(TestCase):
         """проверка возвращаемого статуса кода"""
         response = self.client.get('/category-vue/')
         self.assertEqual(response.status_code, 200)
+        # print(response.context)
         print(4)
 
     def test_cat_get(self):
         """вывод содержимого страницы"""
         response = self.client.get('/category/test/')
         self.assertEqual(response.status_code, 200)
-        print(response.context["object_list"])
+        # print(response.context["object_list"])
         print(5)
