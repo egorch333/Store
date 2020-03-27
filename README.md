@@ -52,3 +52,5 @@ python manage.py dbshell
 _показать миграции в виде списка_
 
 python manage.py showmigrations -l
+
+test
